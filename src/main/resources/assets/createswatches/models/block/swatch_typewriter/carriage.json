@@ -1,0 +1,355 @@
+{
+  "textures": {
+    "brass_block": "create:block/brass_block",
+    "platen": "createswatches:block/typewriter_platen",
+    "paper": "createswatches:block/typewriter_paper",
+    "particle": "create:block/brass_casing"
+  },
+  "elements": [
+    {
+      "from": [
+        1,
+        8,
+        9
+      ],
+      "to": [
+        15,
+        10.5,
+        12
+      ],
+      "faces": {
+        "north": {
+          "uv": [
+            0,
+            0,
+            14,
+            3
+          ],
+          "texture": "#platen"
+        },
+        "south": {
+          "uv": [
+            0,
+            0,
+            14,
+            3
+          ],
+          "texture": "#platen"
+        },
+        "east": {
+          "uv": [
+            14,
+            0,
+            16,
+            3
+          ],
+          "texture": "#platen"
+        },
+        "west": {
+          "uv": [
+            14,
+            0,
+            16,
+            3
+          ],
+          "texture": "#platen"
+        },
+        "up": {
+          "uv": [
+            0,
+            3,
+            14,
+            6
+          ],
+          "texture": "#platen"
+        },
+        "down": {
+          "uv": [
+            0,
+            3,
+            14,
+            6
+          ],
+          "texture": "#platen"
+        }
+      },
+      "name": "platen"
+    },
+    {
+      "from": [
+        0,
+        8.5,
+        9.5
+      ],
+      "to": [
+        1,
+        10,
+        11.5
+      ],
+      "faces": {
+        "north": {
+          "uv": [
+            15,
+            6,
+            16,
+            7.5
+          ],
+          "texture": "#brass_block"
+        },
+        "south": {
+          "uv": [
+            0,
+            6,
+            1,
+            7.5
+          ],
+          "texture": "#brass_block"
+        },
+        "east": {
+          "uv": [
+            4.5,
+            6,
+            6.5,
+            7.5
+          ],
+          "texture": "#brass_block"
+        },
+        "west": {
+          "uv": [
+            9.5,
+            6,
+            11.5,
+            7.5
+          ],
+          "texture": "#brass_block"
+        },
+        "up": {
+          "uv": [
+            0,
+            9.5,
+            1,
+            11.5
+          ],
+          "texture": "#brass_block"
+        },
+        "down": {
+          "uv": [
+            0,
+            4.5,
+            1,
+            6.5
+          ],
+          "texture": "#brass_block"
+        }
+      },
+      "name": "knob_left"
+    },
+    {
+      "from": [
+        15,
+        8.5,
+        9.5
+      ],
+      "to": [
+        16,
+        10,
+        11.5
+      ],
+      "faces": {
+        "north": {
+          "uv": [
+            0,
+            6,
+            1,
+            7.5
+          ],
+          "texture": "#brass_block"
+        },
+        "south": {
+          "uv": [
+            15,
+            6,
+            16,
+            7.5
+          ],
+          "texture": "#brass_block"
+        },
+        "east": {
+          "uv": [
+            4.5,
+            6,
+            6.5,
+            7.5
+          ],
+          "texture": "#brass_block"
+        },
+        "west": {
+          "uv": [
+            9.5,
+            6,
+            11.5,
+            7.5
+          ],
+          "texture": "#brass_block"
+        },
+        "up": {
+          "uv": [
+            15,
+            9.5,
+            16,
+            11.5
+          ],
+          "texture": "#brass_block"
+        },
+        "down": {
+          "uv": [
+            15,
+            4.5,
+            16,
+            6.5
+          ],
+          "texture": "#brass_block"
+        }
+      },
+      "name": "knob_right"
+    },
+    {
+      "from": [
+        0.3,
+        10,
+        7.5
+      ],
+      "to": [
+        1.0,
+        10.7,
+        10.5
+      ],
+      "faces": {
+        "north": {
+          "uv": [
+            15.0,
+            5.300000000000001,
+            15.7,
+            6
+          ],
+          "texture": "#brass_block"
+        },
+        "south": {
+          "uv": [
+            0.3,
+            5.300000000000001,
+            1.0,
+            6
+          ],
+          "texture": "#brass_block"
+        },
+        "east": {
+          "uv": [
+            5.5,
+            5.300000000000001,
+            8.5,
+            6
+          ],
+          "texture": "#brass_block"
+        },
+        "west": {
+          "uv": [
+            7.5,
+            5.300000000000001,
+            10.5,
+            6
+          ],
+          "texture": "#brass_block"
+        },
+        "up": {
+          "uv": [
+            0.3,
+            7.5,
+            1.0,
+            10.5
+          ],
+          "texture": "#brass_block"
+        },
+        "down": {
+          "uv": [
+            0.3,
+            5.5,
+            1.0,
+            8.5
+          ],
+          "texture": "#brass_block"
+        }
+      },
+      "name": "return_lever"
+    },
+    {
+      "from": [
+        4,
+        9.5,
+        10
+      ],
+      "to": [
+        12,
+        15.6,
+        10.2
+      ],
+      "faces": {
+        "north": {
+          "uv": [
+            0,
+            0,
+            8,
+            6.1
+          ],
+          "texture": "#paper"
+        },
+        "south": {
+          "uv": [
+            8,
+            0,
+            16,
+            6.1
+          ],
+          "texture": "#paper"
+        },
+        "east": {
+          "uv": [
+            0,
+            0,
+            0.2,
+            6.1
+          ],
+          "texture": "#paper"
+        },
+        "west": {
+          "uv": [
+            0,
+            0,
+            0.2,
+            6.1
+          ],
+          "texture": "#paper"
+        },
+        "up": {
+          "uv": [
+            0,
+            0,
+            8,
+            0.2
+          ],
+          "texture": "#paper"
+        },
+        "down": {
+          "uv": [
+            0,
+            0,
+            8,
+            0.2
+          ],
+          "texture": "#paper"
+        }
+      },
+      "name": "paper"
+    }
+  ]
+}

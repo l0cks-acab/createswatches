@@ -1,0 +1,212 @@
+package com.lach.createswatches;
+
+import net.minecraft.ChatFormatting;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.core.GlobalPos;
+import net.minecraft.network.chat.Component;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.InteractionResult;
+import net.minecraft.world.InteractionResultHolder;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.BlockItem;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.TooltipFlag;
+import net.minecraft.world.item.context.BlockPlaceContext;
+import net.minecraft.world.item.context.UseOnContext;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.phys.BlockHitResult;
+import net.minecraft.world.phys.Vec3;
+import net.neoforged.neoforge.common.util.BlockSnapshot;
+import net.neoforged.neoforge.event.EventHooks;
+import org.jetbrains.annotations.Nullable;
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+
+/**
+ * Handheld placer. A terminal loads a palette into it and links it; right-click places the selected block straight
+ * out of that typewriter's storage, sneak + right-click or sneak + scroll changes the selection.
+ */
+public class ApplicatorItem extends Item {
+    public ApplicatorItem(Properties props) {
+        super(props);
+    }
+
+    public static ApplicatorData data(ItemStack stack) {
+        return stack.getOrDefault(CreateSwatches.APPLICATOR_DATA.get(), ApplicatorData.EMPTY);
+    }
+
+    /** Moves the selection and tells the player what is selected now. */
+    public static void cycle(Player player, ItemStack stack, int dir) {
+        ApplicatorData d = data(stack);
+        if (d.blocks().isEmpty()) {
+            player.displayClientMessage(Component.translatable("item.createswatches.swatch_applicator.empty").withStyle(ChatFormatting.RED), true);
+            return;
+        }
+        d = d.cycle(dir);
+        stack.set(CreateSwatches.APPLICATOR_DATA.get(), d);
+        Component what = d.selectedBlock().<Component>map(i -> i.getDescription())
+                .orElse(Component.translatable("item.createswatches.swatch_applicator.random"));
+        String pos = d.selected() == ApplicatorData.RANDOM ? "*" : (d.selected() + 1) + "/" + d.blocks().size();
+        player.displayClientMessage(Component.translatable("item.createswatches.swatch_applicator.selected", what, pos), true);
+    }
+
+    @Override
+    public InteractionResultHolder<ItemStack> use(Level level, Player player, InteractionHand hand) {
+        ItemStack stack = player.getItemInHand(hand);
+        if (!player.isSecondaryUseActive()) return InteractionResultHolder.pass(stack);
+        if (level.isClientSide) ClientBridge.openApplicator(hand);
+        return InteractionResultHolder.sidedSuccess(stack, level.isClientSide);
+    }
+
+    @Override
+    public InteractionResult useOn(UseOnContext ctx) {
+        Player player = ctx.getPlayer();
+        if (player == null) return InteractionResult.PASS;
+        if (player.isSecondaryUseActive()) {
+            if (ctx.getLevel().isClientSide) ClientBridge.openApplicator(ctx.getHand());
+            return InteractionResult.sidedSuccess(ctx.getLevel().isClientSide);
+        }
+        if (ctx.getLevel().isClientSide) return InteractionResult.SUCCESS;
+        return place((ServerPlayer) player, ctx);
+    }
+
+    private static InteractionResult place(ServerPlayer player, UseOnContext ctx) {
+        ApplicatorData d = data(ctx.getItemInHand());
+        if (d.blocks().isEmpty()) return fail(player, "empty");
+        TypewriterBlockEntity terminal = linkedTerminal(player, d);
+        if (terminal == null) return InteractionResult.FAIL;
+        if (!terminal.running()) return fail(player, "offline");
+
+        Level level = ctx.getLevel();
+        List<BlockPos> targets = d.mode() == PlaceMode.SINGLE ? List.of(ctx.getClickedPos())
+                : d.mode().targets(level, ctx.getClickedPos(), ctx.getClickedFace(), d.size());
+        if (targets.isEmpty()) return InteractionResult.FAIL;
+        // Each target is clicked at the same spot within its block as the real click, so stairs and slabs face the same way.
+        Vec3 within = ctx.getClickLocation().subtract(Vec3.atLowerCornerOf(ctx.getClickedPos()));
+        int placed = 0;
+        boolean outOfStock = false;
+        for (BlockPos target : targets) {
+            BlockHitResult hit = d.mode() == PlaceMode.SINGLE
+                    ? new BlockHitResult(ctx.getClickLocation(), ctx.getClickedFace(), ctx.getClickedPos(), ctx.isInside())
+                    : new BlockHitResult(Vec3.atLowerCornerOf(target).add(within), ctx.getClickedFace(), target, false);
+            List<Item> order = new ArrayList<>();
+            d.selectedBlock().ifPresentOrElse(order::add, () -> {
+                order.addAll(d.blocks());
+                Collections.shuffle(order);
+            });
+            boolean done = false;
+            for (Item item : order) {
+                if (!(item instanceof BlockItem block)) continue;
+                ItemStack one = new ItemStack(item);
+                BlockPlaceContext place = new BlockPlaceContext(level, player, ctx.getHand(), one, hit);
+                if (!place.canPlace()) {
+                    done = true;
+                    break;
+                }
+                BlockPos at = place.getClickedPos();
+                // Spawn protection, claims and the like get their say before anything leaves storage.
+                if (!level.mayInteract(player, at) || !player.mayUseItemAt(at, ctx.getClickedFace(), one)) {
+                    done = true;
+                    break;
+                }
+                // Check the simulated extraction first so a failed placement never has to put the block back.
+                if (!terminal.take(item, true)) continue;
+                if (placeBlock(level, player, block, place, at, ctx.getClickedFace())) {
+                    terminal.take(item, false);
+                    placed++;
+                }
+                done = true;
+                break;
+            }
+            if (!done && d.selectedBlock().isPresent()) {
+                outOfStock = true;
+                break;
+            }
+        }
+        if (placed == 0) return outOfStock || targets.size() == 1 ? fail(player, "none_stored") : InteractionResult.FAIL;
+        if (targets.size() > 1)
+            player.displayClientMessage(Component.translatable("item.createswatches.swatch_applicator.placed", placed, targets.size()), true);
+        return InteractionResult.CONSUME;
+    }
+
+    /**
+     * Places one block and posts the place event for it, undoing the placement when a protection mod cancels it.
+     * The applicator's own use already captures block snapshots; that is switched off here so a cancelled
+     * placement is caught before its block is taken out of the network.
+     */
+    private static boolean placeBlock(Level level, ServerPlayer player, BlockItem block, BlockPlaceContext place, BlockPos at, Direction face) {
+        boolean capturing = level.captureBlockSnapshots;
+        level.captureBlockSnapshots = false;
+        try {
+            BlockSnapshot before = BlockSnapshot.create(level.dimension(), level, at);
+            if (!block.place(place).consumesAction()) return false;
+            if (EventHooks.onBlockPlace(player, before, face)) {
+                before.restore(Block.UPDATE_ALL);
+                return false;
+            }
+            return true;
+        } finally {
+            level.captureBlockSnapshots = capturing;
+        }
+    }
+
+    private static @Nullable TypewriterBlockEntity linkedTerminal(ServerPlayer player, ApplicatorData d) {
+        if (d.link().isEmpty()) {
+            fail(player, "unlinked");
+            return null;
+        }
+        GlobalPos link = d.link().get();
+        int range = Config.APPLICATOR_RANGE.get();
+        if (!link.dimension().equals(player.level().dimension())
+                || range > 0 && player.blockPosition().distSqr(link.pos()) > (double) range * range) {
+            fail(player, "out_of_range");
+            return null;
+        }
+        ServerLevel level = player.serverLevel();
+        if (!level.isLoaded(link.pos()) || !(level.getBlockEntity(link.pos()) instanceof TypewriterBlockEntity be)) {
+            fail(player, "unlinked");
+            return null;
+        }
+        return be;
+    }
+
+    private static InteractionResult fail(Player player, String why) {
+        player.displayClientMessage(Component.translatable("item.createswatches.swatch_applicator." + why).withStyle(ChatFormatting.RED), true);
+        return InteractionResult.FAIL;
+    }
+
+    /** Changing the selection shouldn't drop and re-raise the item in hand. */
+    @Override
+    public boolean shouldCauseReequipAnimation(ItemStack oldStack, ItemStack newStack, boolean slotChanged) {
+        return slotChanged || !newStack.is(this);
+    }
+
+    @Override
+    public Component getName(ItemStack stack) {
+        ApplicatorData d = data(stack);
+        if (d.blocks().isEmpty()) return super.getName(stack);
+        Component what = d.selectedBlock().<Component>map(Item::getDescription)
+                .orElse(Component.translatable("item.createswatches.swatch_applicator.random"));
+        return Component.translatable("item.createswatches.swatch_applicator.named", super.getName(stack), what);
+    }
+
+    @Override
+    public void appendHoverText(ItemStack stack, TooltipContext ctx, List<Component> tip, TooltipFlag flag) {
+        ApplicatorData d = data(stack);
+        if (d.blocks().isEmpty()) {
+            tip.add(Component.translatable("item.createswatches.swatch_applicator.tip").withStyle(ChatFormatting.GRAY));
+            return;
+        }
+        tip.add(Component.translatable("item.createswatches.swatch_applicator.palette", d.name(), d.blocks().size()).withStyle(ChatFormatting.GRAY));
+        d.link().ifPresent(l -> tip.add(Component.translatable("item.createswatches.swatch_applicator.linked",
+                l.pos().getX(), l.pos().getY(), l.pos().getZ()).withStyle(ChatFormatting.DARK_GRAY)));
+        tip.add(Component.translatable("item.createswatches.swatch_applicator.controls").withStyle(ChatFormatting.DARK_AQUA));
+    }
+}

@@ -1,0 +1,19 @@
+{
+  "variants": {
+    "facing=north": {
+      "model": "createswatches:block/swatch_typewriter/block"
+    },
+    "facing=east": {
+      "model": "createswatches:block/swatch_typewriter/block",
+      "y": 90
+    },
+    "facing=south": {
+      "model": "createswatches:block/swatch_typewriter/block",
+      "y": 180
+    },
+    "facing=west": {
+      "model": "createswatches:block/swatch_typewriter/block",
+      "y": 270
+    }
+  }
+}

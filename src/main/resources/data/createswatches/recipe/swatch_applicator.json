@@ -1,0 +1,12 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "equipment",
+  "pattern": [" E ", "SHS", " A "],
+  "key": {
+    "E": {"item": "create:electron_tube"},
+    "S": {"item": "create:brass_sheet"},
+    "H": {"item": "create:brass_hand"},
+    "A": {"item": "create:andesite_alloy"}
+  },
+  "result": {"id": "createswatches:swatch_applicator", "count": 1}
+}

@@ -1,0 +1,12 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "pattern": [" P ", "SCS", " A "],
+  "key": {
+    "P": {"item": "minecraft:paper"},
+    "S": {"item": "create:brass_sheet"},
+    "C": {"item": "create:brass_casing"},
+    "A": {"item": "create:shaft"}
+  },
+  "result": {"id": "createswatches:swatch_typewriter", "count": 1}
+}
