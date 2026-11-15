@@ -57,21 +57,21 @@ public class CreateSwatches {
     public static final DeferredHolder<DataComponentType<?>, DataComponentType<SwatchCardData>> CARD_DATA = COMPONENTS.registerComponentType("swatch_card",
             b -> b.persistent(SwatchCardData.CODEC).networkSynchronized(SwatchCardData.STREAM_CODEC));
 
-    public static final DeferredBlock<TypewriterBlock> TYPEWRITER = BLOCKS.registerBlock("swatch_typewriter", TypewriterBlock::new, TypewriterBlock.PROPERTIES);
-    public static final DeferredItem<TypewriterItem> TYPEWRITER_ITEM = ITEMS.register("swatch_typewriter", () -> new TypewriterItem(TYPEWRITER.get(), new Item.Properties()));
+    public static final DeferredBlock<CarouselBlock> CAROUSEL = BLOCKS.registerBlock("swatch_carousel", CarouselBlock::new, CarouselBlock.PROPERTIES);
+    public static final DeferredItem<CarouselItem> CAROUSEL_ITEM = ITEMS.register("swatch_carousel", () -> new CarouselItem(CAROUSEL.get(), new Item.Properties()));
     public static final DeferredItem<ApplicatorItem> APPLICATOR = ITEMS.registerItem("swatch_applicator", ApplicatorItem::new, new Item.Properties().stacksTo(1));
     public static final DeferredItem<SwatchCardItem> SWATCH_CARD = ITEMS.registerItem("swatch_card", SwatchCardItem::new, new Item.Properties().stacksTo(16));
 
-    public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<TypewriterBlockEntity>> TYPEWRITER_BE = BLOCK_ENTITIES.register("swatch_typewriter",
-            () -> BlockEntityType.Builder.of((pos, state) -> new TypewriterBlockEntity(CreateSwatches.TYPEWRITER_BE.get(), pos, state), TYPEWRITER.get()).build(null));
-    public static final DeferredHolder<MenuType<?>, MenuType<TypewriterMenu>> TYPEWRITER_MENU = MENUS.register("swatch_typewriter",
-            () -> IMenuTypeExtension.create((id, inv, buf) -> new TypewriterMenu(id, inv)));
+    public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<CarouselBlockEntity>> CAROUSEL_BE = BLOCK_ENTITIES.register("swatch_carousel",
+            () -> BlockEntityType.Builder.of((pos, state) -> new CarouselBlockEntity(CreateSwatches.CAROUSEL_BE.get(), pos, state), CAROUSEL.get()).build(null));
+    public static final DeferredHolder<MenuType<?>, MenuType<CarouselMenu>> CAROUSEL_MENU = MENUS.register("swatch_carousel",
+            () -> IMenuTypeExtension.create((id, inv, buf) -> new CarouselMenu(id, inv)));
 
     public static final DeferredHolder<CreativeModeTab, CreativeModeTab> TAB = TABS.register("main", () -> CreativeModeTab.builder()
             .title(Component.translatable("itemGroup.createswatches"))
-            .icon(() -> new ItemStack(TYPEWRITER_ITEM.get()))
+            .icon(() -> new ItemStack(CAROUSEL_ITEM.get()))
             .displayItems((p, out) -> {
-                out.accept(TYPEWRITER_ITEM.get());
+                out.accept(CAROUSEL_ITEM.get());
                 out.accept(APPLICATOR.get());
             }).build());
 
@@ -83,11 +83,11 @@ public class CreateSwatches {
         MENUS.register(modBus);
         COMPONENTS.register(modBus);
         TABS.register(modBus);
-        if (net.neoforged.fml.loading.FMLEnvironment.dist.isClient()) com.lach.createswatches.client.TypewriterRenderer.init();
+        if (net.neoforged.fml.loading.FMLEnvironment.dist.isClient()) com.lach.createswatches.client.CarouselRenderer.init();
         modBus.addListener(CreateSwatches::registerCaps);
         modBus.addListener(CreateSwatches::registerPayloads);
         modBus.addListener((FMLCommonSetupEvent e) -> e.enqueueWork(() ->
-                BlockStressValues.IMPACTS.register(TYPEWRITER.get(), () -> Config.SPEC.isLoaded() ? Config.STRESS_IMPACT.get() : 1.0)));
+                BlockStressValues.IMPACTS.register(CAROUSEL.get(), () -> Config.SPEC.isLoaded() ? Config.STRESS_IMPACT.get() : 1.0)));
     }
 
     public static ResourceLocation id(String path) {
@@ -95,40 +95,40 @@ public class CreateSwatches {
     }
 
     private static void registerCaps(RegisterCapabilitiesEvent event) {
-        event.registerBlockEntity(Capabilities.ItemHandler.BLOCK, TYPEWRITER_BE.get(), (be, side) -> be.external());
+        event.registerBlockEntity(Capabilities.ItemHandler.BLOCK, CAROUSEL_BE.get(), (be, side) -> be.external());
     }
 
     private static void registerPayloads(RegisterPayloadHandlersEvent event) {
         var r = event.registrar("1");
         r.playToClient(CandidatesPayload.TYPE, CandidatesPayload.STREAM_CODEC, (p, ctx) -> ClientBridge.candidates(p));
         r.playToServer(RefreshPayload.TYPE, RefreshPayload.STREAM_CODEC, (p, ctx) -> {
-            TypewriterMenu menu = openMenu(ctx);
+            CarouselMenu menu = openMenu(ctx);
             if (menu != null) menu.sendCandidates();
         });
         r.playToServer(ReturnPayload.TYPE, ReturnPayload.STREAM_CODEC, (p, ctx) -> {
-            TypewriterMenu menu = openMenu(ctx);
+            CarouselMenu menu = openMenu(ctx);
             if (menu != null) {
                 menu.returnAll();
                 menu.sendCandidates();
             }
         });
         r.playToServer(ExportPayload.TYPE, ExportPayload.STREAM_CODEC, (p, ctx) -> {
-            TypewriterMenu menu = openMenu(ctx);
+            CarouselMenu menu = openMenu(ctx);
             if (menu != null) {
                 menu.export(p.items(), p.perItem(), p.palette());
                 menu.sendCandidates();
             }
         });
         r.playToServer(AddressPayload.TYPE, AddressPayload.STREAM_CODEC, (p, ctx) -> {
-            TypewriterMenu menu = openMenu(ctx);
+            CarouselMenu menu = openMenu(ctx);
             if (menu != null) menu.setAddress(p.address());
         });
         r.playToServer(PrintCardPayload.TYPE, PrintCardPayload.STREAM_CODEC, (p, ctx) -> {
-            TypewriterMenu menu = openMenu(ctx);
+            CarouselMenu menu = openMenu(ctx);
             if (menu != null) menu.printCard(p.name(), p.palette(), p.blocks());
         });
         r.playToServer(LoadApplicatorPayload.TYPE, LoadApplicatorPayload.STREAM_CODEC, (p, ctx) -> {
-            TypewriterMenu menu = openMenu(ctx);
+            CarouselMenu menu = openMenu(ctx);
             if (menu != null) loadApplicator((ServerPlayer) ctx.player(), menu, p);
         });
         r.playToServer(ApplicatorConfigPayload.TYPE, ApplicatorConfigPayload.STREAM_CODEC, (p, ctx) -> {
@@ -143,9 +143,9 @@ public class CreateSwatches {
         });
     }
 
-    /** Fills the first applicator found (hands first, then inventory) with the typewriter's picks and links it. */
-    private static void loadApplicator(ServerPlayer player, TypewriterMenu menu, LoadApplicatorPayload p) {
-        GlobalPos link = menu.typewriterPos();
+    /** Fills the first applicator found (hands first, then inventory) with the carousel's picks and links it. */
+    private static void loadApplicator(ServerPlayer player, CarouselMenu menu, LoadApplicatorPayload p) {
+        GlobalPos link = menu.carouselPos();
         if (link == null) return;
         List<Item> blocks = p.items().stream().filter(i -> i instanceof BlockItem).distinct().toList();
         ItemStack target = ItemStack.EMPTY;
@@ -162,8 +162,8 @@ public class CreateSwatches {
         player.displayClientMessage(Component.translatable("gui.createswatches.applicator_loaded", blocks.size(), p.name()).withStyle(ChatFormatting.GREEN), false);
     }
 
-    private static TypewriterMenu openMenu(IPayloadContext ctx) {
-        if (ctx.player() instanceof ServerPlayer sp && sp.containerMenu instanceof TypewriterMenu m && m.stillValid(sp)) return m;
+    private static CarouselMenu openMenu(IPayloadContext ctx) {
+        if (ctx.player() instanceof ServerPlayer sp && sp.containerMenu instanceof CarouselMenu m && m.stillValid(sp)) return m;
         return null;
     }
 }

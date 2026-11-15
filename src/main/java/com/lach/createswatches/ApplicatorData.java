@@ -35,7 +35,7 @@ public record ApplicatorData(List<Item> blocks, int selected, String name, Optio
     ).apply(i, ApplicatorData::new));
 
     public static final StreamCodec<RegistryFriendlyByteBuf, ApplicatorData> STREAM_CODEC = StreamCodec.composite(
-            ByteBufCodecs.registry(Registries.ITEM).apply(ByteBufCodecs.list(TypewriterBlockEntity.SLOTS)), ApplicatorData::blocks,
+            ByteBufCodecs.registry(Registries.ITEM).apply(ByteBufCodecs.list(CarouselBlockEntity.SLOTS)), ApplicatorData::blocks,
             ByteBufCodecs.VAR_INT, ApplicatorData::selected,
             ByteBufCodecs.STRING_UTF8, ApplicatorData::name,
             GlobalPos.STREAM_CODEC.apply(ByteBufCodecs::optional), ApplicatorData::link,

@@ -3,7 +3,7 @@ package com.lach.createswatches.client;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
-import com.lach.createswatches.TypewriterMenu;
+import com.lach.createswatches.CarouselMenu;
 import net.minecraft.Util;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.Button;
@@ -41,7 +41,7 @@ public class SwatchScreen extends TerminalScreen {
     private EditBox hex;
     private Button schemeBtn;
 
-    public SwatchScreen(TypewriterMenu menu, Inventory inv, Component title) {
+    public SwatchScreen(CarouselMenu menu, Inventory inv, Component title) {
         super(menu, inv, title);
     }
 

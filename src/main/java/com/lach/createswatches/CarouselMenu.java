@@ -22,27 +22,27 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-public class TypewriterMenu extends AbstractContainerMenu {
+public class CarouselMenu extends AbstractContainerMenu {
     /** Most block types sent to the client in one listing. */
     public static final int MAX_CANDIDATES = 32768;
     public static final int OUT_X = 188, OUT_Y = 144, INV_X = 8, INV_Y = 144;
 
-    private final @Nullable TypewriterBlockEntity be;
+    private final @Nullable CarouselBlockEntity be;
     private final Player player;
     private final ContainerLevelAccess access;
 
     /** Client side. */
-    public TypewriterMenu(int id, Inventory inv) {
-        this(id, inv, null, new ItemStackHandler(TypewriterBlockEntity.SLOTS), ContainerLevelAccess.NULL);
+    public CarouselMenu(int id, Inventory inv) {
+        this(id, inv, null, new ItemStackHandler(CarouselBlockEntity.SLOTS), ContainerLevelAccess.NULL);
     }
 
     /** Server side. */
-    public TypewriterMenu(int id, Inventory inv, TypewriterBlockEntity be) {
+    public CarouselMenu(int id, Inventory inv, CarouselBlockEntity be) {
         this(id, inv, be, be.output(), ContainerLevelAccess.create(be.getLevel(), be.getBlockPos()));
     }
 
-    private TypewriterMenu(int id, Inventory inv, @Nullable TypewriterBlockEntity be, ItemStackHandler output, ContainerLevelAccess access) {
-        super(CreateSwatches.TYPEWRITER_MENU.get(), id);
+    private CarouselMenu(int id, Inventory inv, @Nullable CarouselBlockEntity be, ItemStackHandler output, ContainerLevelAccess access) {
+        super(CreateSwatches.CAROUSEL_MENU.get(), id);
         this.be = be;
         this.player = inv.player;
         this.access = access;
@@ -53,16 +53,16 @@ public class TypewriterMenu extends AbstractContainerMenu {
         for (int c = 0; c < 9; c++) addSlot(new Slot(inv, c, INV_X + c * 18, INV_Y + 58));
     }
 
-    public @Nullable TypewriterBlockEntity typewriter() {
+    public @Nullable CarouselBlockEntity carousel() {
         return be;
     }
 
-    /** Where the typewriter is, for linking an applicator; null on the client. */
-    public @Nullable GlobalPos typewriterPos() {
+    /** Where the carousel is, for linking an applicator; null on the client. */
+    public @Nullable GlobalPos carouselPos() {
         return be == null || be.getLevel() == null ? null : GlobalPos.of(be.getLevel().dimension(), be.getBlockPos());
     }
 
-    /** Sends the block items the typewriter can see to this menu's player. */
+    /** Sends the block items the carousel can see to this menu's player. */
     public void sendCandidates() {
         if (!(player instanceof ServerPlayer sp) || be == null) return;
         List<Item> items = new ArrayList<>();
@@ -120,7 +120,7 @@ public class TypewriterMenu extends AbstractContainerMenu {
         Slot slot = slots.get(index);
         if (!slot.hasItem()) return ItemStack.EMPTY;
         ItemStack stack = slot.getItem(), copy = stack.copy();
-        int out = TypewriterBlockEntity.SLOTS;
+        int out = CarouselBlockEntity.SLOTS;
         if (index < out) {
             if (!moveItemStackTo(stack, out, slots.size(), true)) return ItemStack.EMPTY;
         } else if (!moveItemStackTo(stack, 0, out, false)) return ItemStack.EMPTY;
@@ -131,7 +131,7 @@ public class TypewriterMenu extends AbstractContainerMenu {
 
     @Override
     public boolean stillValid(Player player) {
-        return access.evaluate((level, pos) -> level.getBlockState(pos).getBlock() instanceof TypewriterBlock
+        return access.evaluate((level, pos) -> level.getBlockState(pos).getBlock() instanceof CarouselBlock
                 && player.canInteractWithBlock(pos, 4.0), true);
     }
 }

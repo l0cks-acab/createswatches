@@ -1,16 +1,16 @@
 # CreateSwatches
 
-A Create addon for builders. Put a **Swatch Typewriter** on your storage, pick a colour or a theme, and it pulls out the blocks that match.
+A Create addon for builders. Put a **Swatch Carousel**, a spinning swatch stand with a terminal, on your storage, pick a colour or a theme, and it pulls out the blocks that match.
 
-![Typewriter on an item vault](docs/scene.png)
+![Carousel on an item vault](docs/scene.png)
 
 NeoForge 1.21.1, Create 6.0.
 
-## Swatch Typewriter
+## Swatch Carousel
 
 - Place it **on top of a vault, chest or any inventory** and it reads that inventory.
-- Or **tune it to a logistics network**: right-click a Stock Link with the typewriter item (like a Stock Ticker), then place it anywhere. It reads the whole network's stock.
-- It needs **rotation** through a shaft at its back. Stress impact is 1 SU per RPM (configurable).
+- Or **tune it to a logistics network**: right-click a Stock Link with the carousel item (like a Stock Ticker), then place it anywhere. It reads the whole network's stock.
+- It needs **rotation** through a shaft at its back. The input is geared down to spin the tile ring. Stress impact is 1 SU per RPM (configurable).
 
 ### Swatch tab
 Pick a colour (HSV square, hue bar or hex), then a scheme: single, monochrome, analogous, complementary, split complementary or triadic. Tolerance sets how close a block's colour must be (CIELAB). Each sets how many of every block to pull. Full blocks hides slabs, stairs and the like.
@@ -23,24 +23,24 @@ Pick a colour (HSV square, hue bar or hex), then a scheme: single, monochrome, a
 ![Theme tab](docs/theme.png)
 
 ### Export and Return
-- **Storage mode:** Export pulls the picks into the typewriter's 27 output slots. Return puts them back.
-- **Network mode:** type a delivery address. Export orders the picks as packages to that address. The typewriter accepts packages from funnels, chutes or a Frogport and unpacks them into its output.
+- **Storage mode:** Export pulls the picks into the carousel's 27 output slots. Return puts them back.
+- **Network mode:** type a delivery address. Export orders the picks as packages to that address. The carousel accepts packages from funnels, chutes or a Frogport and unpacks them into its output.
 
 ![Network mode](docs/network.png)
 
 Click blocks in the grid to choose exactly which ones export. With none selected, it takes the best matches for each palette colour in turn.
 
-While it types, the carriage slides and the palette appears on the paper.
+The ring of swatch tiles shows the current palette, or the most-stocked blocks sorted by hue when no palette is set. The monitor shows the palette. On export the ring gives an extra turn.
 
-![Typing](docs/typing.png)
+![Carousel](docs/spin.png)
 
 ## Swatch Card
-The card button types the current palette and picked blocks onto a Swatch Card (uses one paper). Use a card on any typewriter to open it on that palette.
+The card button prints the current palette and picked blocks onto a Swatch Card (uses one paper). Use a card on any carousel to open it on that palette.
 
 ![Card](docs/card.png)
 
 ## Swatch Applicator
-Handheld placer. Load it from a typewriter with the applicator button. It places the selected block (or a random one from the palette), taking from the typewriter's output first and then the storage it sits on. In network mode, order blocks into the typewriter first.
+Handheld placer. Load it from a carousel with the applicator button. It places the selected block (or a random one from the palette), taking from the carousel's output first and then the storage it sits on. In network mode, order blocks into the carousel first.
 
 - Shift + right-click: settings (block, Single / Wand / Line / Square, size)
 - Shift + scroll: change block
@@ -48,14 +48,14 @@ Handheld placer. Load it from a typewriter with the applicator button. It places
 ![Applicator](docs/applicator.png)
 
 ## Recipes
-- Swatch Typewriter: paper, 2 brass sheets, brass casing, shaft
+- Swatch Carousel: paper, 2 brass sheets, brass casing, shaft
 - Swatch Applicator: electron tube, 2 brass sheets, brass hand, andesite alloy
 
 ## Config
 `config/createswatches-server.toml`: rotation on/off, stress impact, card paper cost, applicator range.
 
 ## Building
-`./gradlew build`. Textures and models come from `tools/typewriter_model.py` and `tools/applicator_texture.py`.
+`./gradlew build`. Textures and models come from `tools/carousel_model.py` and `tools/applicator_texture.py`.
 
 ## License
 MIT

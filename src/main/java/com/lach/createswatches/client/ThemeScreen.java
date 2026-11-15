@@ -1,6 +1,6 @@
 package com.lach.createswatches.client;
 
-import com.lach.createswatches.TypewriterMenu;
+import com.lach.createswatches.CarouselMenu;
 import net.minecraft.Util;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.network.chat.Component;
@@ -27,7 +27,7 @@ public class ThemeScreen extends TerminalScreen {
     private Theme selected;
     private int listScroll;
 
-    public ThemeScreen(TypewriterMenu menu, Inventory inv, Component title) {
+    public ThemeScreen(CarouselMenu menu, Inventory inv, Component title) {
         super(menu, inv, title);
     }
 
@@ -61,7 +61,7 @@ public class ThemeScreen extends TerminalScreen {
                 new MenuEntry(Component.translatable("gui.createswatches.folder"), () -> Util.getPlatform().openFile(ThemeManager.userDir().toFile()))));
     }
 
-    /** Set when the typewriter is opened with a Swatch Card in hand; shown at the top of the list. */
+    /** Set when the carousel is opened with a Swatch Card in hand; shown at the top of the list. */
     public static com.lach.createswatches.SwatchCardData pendingCard;
     private static Theme cardTheme;
 

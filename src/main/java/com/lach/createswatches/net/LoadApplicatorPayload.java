@@ -1,7 +1,7 @@
 package com.lach.createswatches.net;
 
 import com.lach.createswatches.CreateSwatches;
-import com.lach.createswatches.TypewriterBlockEntity;
+import com.lach.createswatches.CarouselBlockEntity;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.ByteBufCodecs;
@@ -15,7 +15,7 @@ import java.util.List;
 public record LoadApplicatorPayload(List<Item> items, String name) implements CustomPacketPayload {
     public static final Type<LoadApplicatorPayload> TYPE = new Type<>(CreateSwatches.id("load_applicator"));
     public static final StreamCodec<RegistryFriendlyByteBuf, LoadApplicatorPayload> STREAM_CODEC = StreamCodec.composite(
-            ByteBufCodecs.registry(Registries.ITEM).apply(ByteBufCodecs.list(TypewriterBlockEntity.SLOTS)), LoadApplicatorPayload::items,
+            ByteBufCodecs.registry(Registries.ITEM).apply(ByteBufCodecs.list(CarouselBlockEntity.SLOTS)), LoadApplicatorPayload::items,
             ByteBufCodecs.stringUtf8(64), LoadApplicatorPayload::name,
             LoadApplicatorPayload::new);
 

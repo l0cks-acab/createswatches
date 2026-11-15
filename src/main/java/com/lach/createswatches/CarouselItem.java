@@ -19,9 +19,9 @@ import net.minecraft.world.level.block.Block;
 
 import java.util.List;
 
-/** Right-click a Stock Link to tune the typewriter to its logistics network, like a Stock Ticker. Right-click air to clear. */
-public class TypewriterItem extends BlockItem {
-    public TypewriterItem(Block block, Properties props) {
+/** Right-click a Stock Link to tune the carousel to its logistics network, like a Stock Ticker. Right-click air to clear. */
+public class CarouselItem extends BlockItem {
+    public CarouselItem(Block block, Properties props) {
         super(block, props);
     }
 
@@ -36,7 +36,7 @@ public class TypewriterItem extends BlockItem {
         if (!LogisticallyLinkedBlockItem.isTuned(stack)) return super.use(level, player, hand);
         if (!level.isClientSide) {
             stack.remove(DataComponents.BLOCK_ENTITY_DATA);
-            player.displayClientMessage(Component.translatable("item.createswatches.typewriter.cleared"), true);
+            player.displayClientMessage(Component.translatable("item.createswatches.carousel.cleared"), true);
         }
         return InteractionResultHolder.sidedSuccess(stack, level.isClientSide);
     }
@@ -46,7 +46,7 @@ public class TypewriterItem extends BlockItem {
         Player player = ctx.getPlayer();
         if (player != null && !player.isShiftKeyDown()) {
             LogisticallyLinkedBehaviour link = BlockEntityBehaviour.get(ctx.getLevel(), ctx.getClickedPos(), LogisticallyLinkedBehaviour.TYPE);
-            if (link != null && !(ctx.getLevel().getBlockEntity(ctx.getClickedPos()) instanceof TypewriterBlockEntity)) {
+            if (link != null && !(ctx.getLevel().getBlockEntity(ctx.getClickedPos()) instanceof CarouselBlockEntity)) {
                 if (!ctx.getLevel().isClientSide && link.mayInteractMessage(player))
                     LogisticallyLinkedBlockItem.assignFrequency(ctx.getItemInHand(), player, link.freqId);
                 return InteractionResult.sidedSuccess(ctx.getLevel().isClientSide);
@@ -58,7 +58,7 @@ public class TypewriterItem extends BlockItem {
     @Override
     public void appendHoverText(ItemStack stack, TooltipContext ctx, List<Component> tip, TooltipFlag flag) {
         super.appendHoverText(stack, ctx, tip, flag);
-        tip.add(Component.translatable(LogisticallyLinkedBlockItem.isTuned(stack) ? "item.createswatches.typewriter.tuned"
-                : "item.createswatches.typewriter.tip").withStyle(ChatFormatting.GRAY));
+        tip.add(Component.translatable(LogisticallyLinkedBlockItem.isTuned(stack) ? "item.createswatches.carousel.tuned"
+                : "item.createswatches.carousel.tip").withStyle(ChatFormatting.GRAY));
     }
 }

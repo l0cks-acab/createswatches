@@ -10,7 +10,7 @@ import net.minecraft.world.item.TooltipFlag;
 
 import java.util.List;
 
-/** Paper card with a palette typed on it. Use it on a typewriter to open it with that palette. */
+/** Paper card with a palette typed on it. Use it on a carousel to open it with that palette. */
 public class SwatchCardItem extends Item {
     public SwatchCardItem(Properties props) {
         super(props);

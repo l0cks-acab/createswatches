@@ -11,7 +11,7 @@ import net.minecraft.world.item.Item;
 import java.util.ArrayList;
 import java.util.List;
 
-/** Block items the typewriter can see, with amounts, plus where they come from and whether it is turning. */
+/** Block items the carousel can see, with amounts, plus where they come from and whether it is turning. */
 public record CandidatesPayload(int source, boolean running, String address, List<Item> items, long[] amounts) implements CustomPacketPayload {
     public static final Type<CandidatesPayload> TYPE = new Type<>(CreateSwatches.id("candidates"));
     private static final StreamCodec<RegistryFriendlyByteBuf, Item> ITEM = ByteBufCodecs.registry(Registries.ITEM);

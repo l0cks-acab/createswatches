@@ -8,5 +8,5 @@
     "C": {"item": "create:brass_casing"},
     "A": {"item": "create:shaft"}
   },
-  "result": {"id": "createswatches:swatch_typewriter", "count": 1}
+  "result": {"id": "createswatches:swatch_carousel", "count": 1}
 }

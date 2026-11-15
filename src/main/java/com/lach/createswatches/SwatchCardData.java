@@ -21,7 +21,7 @@ public record SwatchCardData(String name, List<Integer> palette, List<Item> bloc
 
     public static final StreamCodec<RegistryFriendlyByteBuf, SwatchCardData> STREAM_CODEC = StreamCodec.composite(
             ByteBufCodecs.STRING_UTF8, SwatchCardData::name,
-            ByteBufCodecs.INT.apply(ByteBufCodecs.list(TypewriterBlockEntity.MAX_PALETTE)), SwatchCardData::palette,
-            ByteBufCodecs.registry(Registries.ITEM).apply(ByteBufCodecs.list(TypewriterBlockEntity.SLOTS)), SwatchCardData::blocks,
+            ByteBufCodecs.INT.apply(ByteBufCodecs.list(CarouselBlockEntity.MAX_PALETTE)), SwatchCardData::palette,
+            ByteBufCodecs.registry(Registries.ITEM).apply(ByteBufCodecs.list(CarouselBlockEntity.SLOTS)), SwatchCardData::blocks,
             SwatchCardData::new);
 }

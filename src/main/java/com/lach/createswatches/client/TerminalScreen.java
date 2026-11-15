@@ -1,8 +1,8 @@
 package com.lach.createswatches.client;
 
 import com.lach.createswatches.CreateSwatches;
-import com.lach.createswatches.TypewriterMenu;
-import com.lach.createswatches.TypewriterBlockEntity;
+import com.lach.createswatches.CarouselMenu;
+import com.lach.createswatches.CarouselBlockEntity;
 import com.lach.createswatches.net.CandidatesPayload;
 import com.lach.createswatches.net.AddressPayload;
 import com.lach.createswatches.net.PrintCardPayload;
@@ -37,7 +37,7 @@ import java.util.List;
 import java.util.Set;
 
 /** Shared terminal screen: the match grid, Export/Return/Refresh and the output slots. Subclasses supply the palette. */
-public abstract class TerminalScreen extends AbstractContainerScreen<TypewriterMenu> {
+public abstract class TerminalScreen extends AbstractContainerScreen<CarouselMenu> {
     protected static final int GRID_X = 188, GRID_Y = 18, COLS = 9, ROWS = 5, CELL = 18;
     protected static final int[] PER_ITEM = {1, 4, 8, 16, 32, 64};
     protected static final int MAX_TOLERANCE = 60;
@@ -59,14 +59,14 @@ public abstract class TerminalScreen extends AbstractContainerScreen<TypewriterM
 
     private static final int MENU_ROW = 14;
 
-    /** Which screen the typewriter opens on next; flipped by the tabs. */
+    /** Which screen the carousel opens on next; flipped by the tabs. */
     public static boolean themeMode = false;
 
     private List<Item> stored = List.of();
     private final Set<Item> autocraftable = Set.of();
     private long[] amounts = new long[0];
     private boolean networkOnline, loaded;
-    /** {@link com.lach.createswatches.TypewriterBlockEntity.Source} ordinal. */
+    /** {@link com.lach.createswatches.CarouselBlockEntity.Source} ordinal. */
     private int source;
     private boolean running;
     private String address = "";
@@ -84,12 +84,12 @@ public abstract class TerminalScreen extends AbstractContainerScreen<TypewriterM
     private FloppyButton floppy;
     private int menuX, menuY, menuW;
 
-    protected TerminalScreen(TypewriterMenu menu, Inventory inv, Component title) {
+    protected TerminalScreen(CarouselMenu menu, Inventory inv, Component title) {
         super(menu, inv, title);
         imageWidth = 358;
-        imageHeight = TypewriterMenu.INV_Y + 83;
-        inventoryLabelX = TypewriterMenu.INV_X;
-        inventoryLabelY = TypewriterMenu.INV_Y - 11;
+        imageHeight = CarouselMenu.INV_Y + 83;
+        inventoryLabelX = CarouselMenu.INV_X;
+        inventoryLabelY = CarouselMenu.INV_Y - 11;
     }
 
     /** Palette for the current settings, as 0xRRGGBB, in export order. */
@@ -132,7 +132,7 @@ public abstract class TerminalScreen extends AbstractContainerScreen<TypewriterM
         });
         addressBox.visible = false;
         addRenderableWidget(addressBox);
-        // Tabs: the same typewriter, two ways to build a palette.
+        // Tabs: the same carousel, two ways to build a palette.
         addRenderableWidget(new TabButton(x + 6, y + 3, Component.translatable("gui.createswatches.tab.swatch"), false));
         addRenderableWidget(new TabButton(x + 58, y + 3, Component.translatable("gui.createswatches.tab.theme"), true));
         initPanel(x, y);
@@ -251,16 +251,16 @@ public abstract class TerminalScreen extends AbstractContainerScreen<TypewriterM
      */
     private List<Item> applicatorBlocks() {
         List<Item> out = new ArrayList<>();
-        for (Match m : matches) if (selected().contains(m.item()) && out.size() < TypewriterBlockEntity.SLOTS) out.add(m.item());
+        for (Match m : matches) if (selected().contains(m.item()) && out.size() < CarouselBlockEntity.SLOTS) out.add(m.item());
         if (!out.isEmpty()) return out;
         if (!exports.isEmpty()) return List.copyOf(exports);
         List<List<Match>> bySwatch = new ArrayList<>();
         for (int i = 0; i < palette.length; i++) bySwatch.add(new ArrayList<>());
         for (Match m : matches) bySwatch.get(m.swatch()).add(m);
-        for (int round = 0; out.size() < TypewriterBlockEntity.SLOTS; round++) {
+        for (int round = 0; out.size() < CarouselBlockEntity.SLOTS; round++) {
             boolean any = false;
             for (List<Match> list : bySwatch) {
-                if (round >= list.size() || out.size() >= TypewriterBlockEntity.SLOTS) continue;
+                if (round >= list.size() || out.size() >= CarouselBlockEntity.SLOTS) continue;
                 out.add(list.get(round).item());
                 any = true;
             }
@@ -461,13 +461,13 @@ public abstract class TerminalScreen extends AbstractContainerScreen<TypewriterM
         for (int i = 0; i < palette.length; i++) bySwatch.add(new ArrayList<>());
         List<Match> picked = new ArrayList<>();
         for (Match m : matches)
-            if (!m.craftable() && selected().contains(m.item()) && picked.size() < TypewriterBlockEntity.SLOTS) picked.add(m);
+            if (!m.craftable() && selected().contains(m.item()) && picked.size() < CarouselBlockEntity.SLOTS) picked.add(m);
         if (picked.isEmpty()) {
             for (Match m : matches) if (!m.craftable()) bySwatch.get(m.swatch()).add(m);
-            for (int round = 0; picked.size() < TypewriterBlockEntity.SLOTS; round++) {
+            for (int round = 0; picked.size() < CarouselBlockEntity.SLOTS; round++) {
                 boolean any = false;
                 for (List<Match> list : bySwatch) {
-                    if (round >= list.size() || picked.size() >= TypewriterBlockEntity.SLOTS) continue;
+                    if (round >= list.size() || picked.size() >= CarouselBlockEntity.SLOTS) continue;
                     picked.add(list.get(round));
                     any = true;
                 }
@@ -611,7 +611,7 @@ public abstract class TerminalScreen extends AbstractContainerScreen<TypewriterM
                 .withStyle(ChatFormatting.GREEN);
         g.drawString(font, status, imageWidth - 8 - font.width(status), 6, 0xFFFFFFFF, false);
         g.drawString(font, playerInventoryTitle, inventoryLabelX, inventoryLabelY, 0xFFE0CFAF, false);
-        g.drawString(font, Component.translatable("gui.createswatches.output"), TypewriterMenu.OUT_X, inventoryLabelY, 0xFFE0CFAF, false);
+        g.drawString(font, Component.translatable("gui.createswatches.output"), CarouselMenu.OUT_X, inventoryLabelY, 0xFFE0CFAF, false);
 
     }
 

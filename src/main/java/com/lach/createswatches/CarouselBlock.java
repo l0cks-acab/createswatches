@@ -25,18 +25,17 @@ import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
 
-/** Swatch Typewriter: sits on storage (or is tuned to a logistics network), takes rotation through a shaft at its back. */
-public class TypewriterBlock extends HorizontalKineticBlock implements IBE<TypewriterBlockEntity> {
+/** Swatch Carousel: sits on storage (or is tuned to a logistics network), takes rotation through a shaft at its back; the tile ring is geared to spin flat. */
+public class CarouselBlock extends HorizontalKineticBlock implements IBE<CarouselBlockEntity> {
     public static final BlockBehaviour.Properties PROPERTIES = BlockBehaviour.Properties.of()
             .mapColor(MapColor.TERRACOTTA_YELLOW).strength(1.5f, 6f).sound(SoundType.WOOD).noOcclusion();
 
     private static final VoxelShape SHAPE_NORTH = Shapes.or(
-            Block.box(1, 0, 1, 15, 4, 15),
-            Block.box(2, 4, 5, 14, 9, 14),
-            Block.box(3, 9, 9, 13, 16, 12));
+            Block.box(0.5, 0, 0.5, 15.5, 9.5, 15.5),
+            Block.box(4.5, 9.5, 5, 11.5, 14.2, 10.5));
     private static final VoxelShape[] SHAPES = new VoxelShape[4];
 
-    public TypewriterBlock(Properties props) {
+    public CarouselBlock(Properties props) {
         super(props);
     }
 
@@ -77,7 +76,7 @@ public class TypewriterBlock extends HorizontalKineticBlock implements IBE<Typew
     @Override
     public void setPlacedBy(Level level, BlockPos pos, BlockState state, @org.jetbrains.annotations.Nullable net.minecraft.world.entity.LivingEntity placer, ItemStack stack) {
         super.setPlacedBy(level, pos, state, placer, stack);
-        if (!level.isClientSide && level.getBlockEntity(pos) instanceof TypewriterBlockEntity be)
+        if (!level.isClientSide && level.getBlockEntity(pos) instanceof CarouselBlockEntity be)
             be.setTuned(com.simibubi.create.content.logistics.packagerLink.LogisticallyLinkedBlockItem.isTuned(stack));
     }
 
@@ -96,17 +95,17 @@ public class TypewriterBlock extends HorizontalKineticBlock implements IBE<Typew
     }
 
     private void open(Level level, BlockPos pos, Player player) {
-        if (!level.isClientSide && player instanceof ServerPlayer sp && level.getBlockEntity(pos) instanceof TypewriterBlockEntity be)
+        if (!level.isClientSide && player instanceof ServerPlayer sp && level.getBlockEntity(pos) instanceof CarouselBlockEntity be)
             sp.openMenu(be, pos);
     }
 
     @Override
-    public Class<TypewriterBlockEntity> getBlockEntityClass() {
-        return TypewriterBlockEntity.class;
+    public Class<CarouselBlockEntity> getBlockEntityClass() {
+        return CarouselBlockEntity.class;
     }
 
     @Override
-    public BlockEntityType<? extends TypewriterBlockEntity> getBlockEntityType() {
-        return CreateSwatches.TYPEWRITER_BE.get();
+    public BlockEntityType<? extends CarouselBlockEntity> getBlockEntityType() {
+        return CreateSwatches.CAROUSEL_BE.get();
     }
 }

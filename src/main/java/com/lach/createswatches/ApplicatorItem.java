@@ -31,7 +31,7 @@ import java.util.List;
 
 /**
  * Handheld placer. A terminal loads a palette into it and links it; right-click places the selected block straight
- * out of that typewriter's storage, sneak + right-click or sneak + scroll changes the selection.
+ * out of that carousel's storage, sneak + right-click or sneak + scroll changes the selection.
  */
 public class ApplicatorItem extends Item {
     public ApplicatorItem(Properties props) {
@@ -80,7 +80,7 @@ public class ApplicatorItem extends Item {
     private static InteractionResult place(ServerPlayer player, UseOnContext ctx) {
         ApplicatorData d = data(ctx.getItemInHand());
         if (d.blocks().isEmpty()) return fail(player, "empty");
-        TypewriterBlockEntity terminal = linkedTerminal(player, d);
+        CarouselBlockEntity terminal = linkedTerminal(player, d);
         if (terminal == null) return InteractionResult.FAIL;
         if (!terminal.running()) return fail(player, "offline");
 
@@ -157,7 +157,7 @@ public class ApplicatorItem extends Item {
         }
     }
 
-    private static @Nullable TypewriterBlockEntity linkedTerminal(ServerPlayer player, ApplicatorData d) {
+    private static @Nullable CarouselBlockEntity linkedTerminal(ServerPlayer player, ApplicatorData d) {
         if (d.link().isEmpty()) {
             fail(player, "unlinked");
             return null;
@@ -170,7 +170,7 @@ public class ApplicatorItem extends Item {
             return null;
         }
         ServerLevel level = player.serverLevel();
-        if (!level.isLoaded(link.pos()) || !(level.getBlockEntity(link.pos()) instanceof TypewriterBlockEntity be)) {
+        if (!level.isLoaded(link.pos()) || !(level.getBlockEntity(link.pos()) instanceof CarouselBlockEntity be)) {
             fail(player, "unlinked");
             return null;
         }

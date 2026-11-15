@@ -37,12 +37,12 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
-public class TypewriterBlockEntity extends KineticBlockEntity implements MenuProvider {
+public class CarouselBlockEntity extends KineticBlockEntity implements MenuProvider {
     public static final int SLOTS = 27;
     public static final int MAX_PALETTE = 8;
     private static final int TYPE_TICKS = 36;
 
-    /** Where the typewriter reads blocks from. */
+    /** Where the carousel reads blocks from. */
     public enum Source {
         NONE, INVENTORY, NETWORK
     }
@@ -51,6 +51,9 @@ public class TypewriterBlockEntity extends KineticBlockEntity implements MenuPro
     private boolean tuned;
     private String address = "";
     private int[] palette = new int[0];
+    /** Most-stocked blocks, synced so the ring can show what the storage holds when no palette is set. */
+    private List<Item> showcase = List.of();
+    public static final int RING = 28;
     private int typing;
 
     private final ItemStackHandler output = new ItemStackHandler(SLOTS) {
@@ -94,7 +97,7 @@ public class TypewriterBlockEntity extends KineticBlockEntity implements MenuPro
         }
     };
 
-    public TypewriterBlockEntity(BlockEntityType<?> type, BlockPos pos, BlockState state) {
+    public CarouselBlockEntity(BlockEntityType<?> type, BlockPos pos, BlockState state) {
         super(type, pos, state);
         setLazyTickRate(10);
     }
@@ -127,6 +130,19 @@ public class TypewriterBlockEntity extends KineticBlockEntity implements MenuPro
         return palette;
     }
 
+    public List<Item> showcase() {
+        return showcase;
+    }
+
+    private void refreshShowcase() {
+        List<Item> top = stock().entrySet().stream().sorted(Map.Entry.<Item, Long>comparingByValue().reversed())
+                .limit(RING).map(Map.Entry::getKey).toList();
+        if (!top.equals(showcase)) {
+            showcase = top;
+            sendData();
+        }
+    }
+
     public int typing() {
         return typing;
     }
@@ -155,11 +171,11 @@ public class TypewriterBlockEntity extends KineticBlockEntity implements MenuPro
         return attached() != null ? Source.INVENTORY : Source.NONE;
     }
 
-    /** The inventory the typewriter sits on, if any. */
+    /** The inventory the carousel sits on, if any. */
     public @Nullable IItemHandler attached() {
         if (level == null) return null;
         BlockPos below = worldPosition.below();
-        if (level.getBlockEntity(below) instanceof TypewriterBlockEntity) return null;
+        if (level.getBlockEntity(below) instanceof CarouselBlockEntity) return null;
         return level.getCapability(Capabilities.ItemHandler.BLOCK, below, Direction.UP);
     }
 
@@ -254,7 +270,7 @@ public class TypewriterBlockEntity extends KineticBlockEntity implements MenuPro
 
     /**
      * Takes one of {@code item} for an applicator: from the output slots first, then the storage underneath.
-     * Network blocks have to be ordered into the typewriter first.
+     * Network blocks have to be ordered into the carousel first.
      */
     public boolean take(Item item, boolean simulate) {
         if (!running()) return false;
@@ -287,6 +303,7 @@ public class TypewriterBlockEntity extends KineticBlockEntity implements MenuPro
     @Override
     public void tick() {
         super.tick();
+        if (level != null && !level.isClientSide && (level.getGameTime() + worldPosition.hashCode()) % 100 == 0) refreshShowcase();
         if (typing <= 0) return;
         typing--;
         if (level != null && !level.isClientSide) {
@@ -314,7 +331,12 @@ public class TypewriterBlockEntity extends KineticBlockEntity implements MenuPro
         tag.putBoolean("Tuned", tuned);
         tag.putString("Address", address);
         tag.putIntArray("Palette", palette);
-        if (clientPacket) tag.putInt("Typing", typing);
+        if (clientPacket) {
+            tag.putInt("Typing", typing);
+            net.minecraft.nbt.ListTag list = new net.minecraft.nbt.ListTag();
+            for (Item i : showcase) list.add(net.minecraft.nbt.StringTag.valueOf(net.minecraft.core.registries.BuiltInRegistries.ITEM.getKey(i).toString()));
+            tag.put("Showcase", list);
+        }
         else tag.put("Output", output.serializeNBT(regs));
     }
 
@@ -324,7 +346,15 @@ public class TypewriterBlockEntity extends KineticBlockEntity implements MenuPro
         tuned = tag.getBoolean("Tuned");
         address = tag.getString("Address");
         palette = tag.getIntArray("Palette");
-        if (clientPacket) typing = tag.getInt("Typing");
+        if (clientPacket) {
+            typing = tag.getInt("Typing");
+            List<Item> list = new ArrayList<>();
+            for (net.minecraft.nbt.Tag t : tag.getList("Showcase", net.minecraft.nbt.Tag.TAG_STRING)) {
+                net.minecraft.resources.ResourceLocation id = net.minecraft.resources.ResourceLocation.tryParse(t.getAsString());
+                if (id != null) net.minecraft.core.registries.BuiltInRegistries.ITEM.getOptional(id).ifPresent(list::add);
+            }
+            showcase = list;
+        }
         else if (tag.contains("Output")) output.deserializeNBT(regs, tag.getCompound("Output"));
     }
 
@@ -343,6 +373,6 @@ public class TypewriterBlockEntity extends KineticBlockEntity implements MenuPro
 
     @Override
     public @Nullable AbstractContainerMenu createMenu(int id, Inventory inv, Player player) {
-        return new TypewriterMenu(id, inv, this);
+        return new CarouselMenu(id, inv, this);
     }
 }

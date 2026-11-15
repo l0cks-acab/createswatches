@@ -17,7 +17,7 @@ public final class ClientSetup {
 
     @SubscribeEvent
     static void screens(RegisterMenuScreensEvent event) {
-        event.<com.lach.createswatches.TypewriterMenu, TerminalScreen>register(CreateSwatches.TYPEWRITER_MENU.get(), (menu, inv, title) -> {
+        event.<com.lach.createswatches.CarouselMenu, TerminalScreen>register(CreateSwatches.CAROUSEL_MENU.get(), (menu, inv, title) -> {
             SwatchCardData card = inv.player.getMainHandItem().get(CreateSwatches.CARD_DATA.get());
             if (card != null) {
                 ThemeScreen.pendingCard = card;
@@ -29,12 +29,12 @@ public final class ClientSetup {
 
     @SubscribeEvent
     static void renderers(EntityRenderersEvent.RegisterRenderers event) {
-        event.registerBlockEntityRenderer(CreateSwatches.TYPEWRITER_BE.get(), TypewriterRenderer::new);
+        event.registerBlockEntityRenderer(CreateSwatches.CAROUSEL_BE.get(), CarouselRenderer::new);
     }
 
     @SubscribeEvent
     static void setup(net.neoforged.fml.event.lifecycle.FMLClientSetupEvent event) {
-        event.enqueueWork(TypewriterVisuals::register);
+        event.enqueueWork(CarouselVisuals::register);
     }
 
     @SubscribeEvent
