@@ -28,13 +28,13 @@ import org.joml.Matrix4f;
 
 import java.util.List;
 
-/** Draws the applicator's model, then the selected block's texture on its screen. */
+/** Draws the applicator's model, then the selected block's texture in its sample window. */
 public class ApplicatorRenderer extends BlockEntityWithoutLevelRenderer {
     public static final ModelResourceLocation BASE = ModelResourceLocation.standalone(CreateSwatches.id("item/swatch_applicator_base"));
-    /** Screen area on the head's top face, in model pixels, before the head's tilt. */
-    private static final float X0 = 5.5f, X1 = 10f, Z0 = 5.75f, Z1 = 10.25f, Y = 15.26f;
-    /** Head tilt about z, matching tools/applicator_model.py (HEAD_ANGLE, HEAD_ORIGIN). */
-    private static final float HEAD_ANGLE = 22.5f, HEAD_OX = 8f, HEAD_OY = 13.5f;
+    /** Sample window on top of the body, in model pixels (tools/applicator_model.py). */
+    private static final float X0 = 6f, X1 = 10f, Z0 = 7f, Z1 = 9f, Y = 11.05f;
+    /** The body is not tilted; kept so the hologram maths stays general. */
+    private static final float HEAD_ANGLE = 0f, HEAD_OX = 8f, HEAD_OY = 11f;
 
     public ApplicatorRenderer() {
         super(Minecraft.getInstance().getBlockEntityRenderDispatcher(), Minecraft.getInstance().getEntityModels());

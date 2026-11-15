@@ -31,8 +31,8 @@ public class CarouselBlock extends HorizontalKineticBlock implements IBE<Carouse
             .mapColor(MapColor.TERRACOTTA_YELLOW).strength(1.5f, 6f).sound(SoundType.WOOD).noOcclusion();
 
     private static final VoxelShape SHAPE_NORTH = Shapes.or(
-            Block.box(0.5, 0, 0.5, 15.5, 9.5, 15.5),
-            Block.box(4.5, 9.5, 5, 11.5, 14.2, 10.5));
+            Block.box(0.5, 0, 0.5, 15.5, 12.5, 15.5),
+            Block.box(4.5, 12.5, 5, 11.5, 16, 10.5));
     private static final VoxelShape[] SHAPES = new VoxelShape[4];
 
     public CarouselBlock(Properties props) {

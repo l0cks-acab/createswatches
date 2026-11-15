@@ -23,22 +23,22 @@ import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 
-/** Back shaft (without Flywheel), the spinning ring of swatch tiles and the palette on the monitor. */
+/** Back cog connector (without Flywheel), the spinning ring of swatch tiles and the palette on the monitor. */
 public class CarouselRenderer extends KineticBlockEntityRenderer<CarouselBlockEntity> {
     private static final ResourceLocation WHITE = CreateSwatches.id("textures/block/chip.png");
     /** Flourish length in ticks; matches the block entity. */
     private static final float SPIN_TICKS = 36f;
     /** The ring is geared down from the input shaft. */
     private static final float GEARING = 1 / 6f;
-    private static final float BASE = 6 / 16f, TOP = 9.4f / 16f;
+    private static final float BASE = 9 / 16f, TOP = 12.4f / 16f;
     private static final float R0 = 5.0f / 16f, R1 = 7.3f / 16f, HALF_W = 0.32f / 16f;
     private static final int BLANK = 0x5A5048;
 
-    public static dev.engine_room.flywheel.lib.model.baked.PartialModel STUB;
+    public static dev.engine_room.flywheel.lib.model.baked.PartialModel COG;
 
     /** Partial models must exist before models load. */
     public static void init() {
-        if (STUB == null) STUB = dev.engine_room.flywheel.lib.model.baked.PartialModel.of(CreateSwatches.id("block/swatch_carousel/shaft_stub"));
+        if (COG == null) COG = dev.engine_room.flywheel.lib.model.baked.PartialModel.of(CreateSwatches.id("block/swatch_carousel/cog"));
     }
 
     public CarouselRenderer(BlockEntityRendererProvider.Context ctx) {
@@ -47,7 +47,7 @@ public class CarouselRenderer extends KineticBlockEntityRenderer<CarouselBlockEn
 
     @Override
     protected SuperByteBuffer getRotatedModel(CarouselBlockEntity be, BlockState state) {
-        return CachedBuffers.partialFacing(STUB, state, state.getValue(HorizontalKineticBlock.HORIZONTAL_FACING).getOpposite());
+        return CachedBuffers.partialFacing(COG, state, state.getValue(HorizontalKineticBlock.HORIZONTAL_FACING).getOpposite());
     }
 
     /** Colours for each tile: the palette in blocks, else the stocked blocks sorted round the hue wheel. */
@@ -112,7 +112,7 @@ public class CarouselRenderer extends KineticBlockEntityRenderer<CarouselBlockEn
             for (int i = 0; i < shown; i++) {
                 int col = i % 4, row = i / 4;
                 float x0 = (5.7f + col * 1.2f) / 16f, x1 = x0 + 1.0f / 16f;
-                float y1 = (12.4f - row * 1.4f) / 16f, y0 = y1 - 1.0f / 16f;
+                float y1 = (14.6f - row * 1.4f) / 16f, y0 = y1 - 1.0f / 16f;
                 quad(vc, pose, x0, y0, x1, y1, z, pal[i], light);
             }
         } else {
@@ -122,7 +122,7 @@ public class CarouselRenderer extends KineticBlockEntityRenderer<CarouselBlockEn
                 int rgb = info == null ? BLANK : info.rgb();
                 float x0 = (5.7f + i * 0.6f) / 16f, x1 = x0 + 0.45f / 16f;
                 float h = 2.8f * (1 - i / 10f);
-                quad(vc, pose, x0, 8.9f / 16f, x1, (8.9f + h) / 16f, z, rgb, light);
+                quad(vc, pose, x0, 11.3f / 16f, x1, (11.3f + h) / 16f, z, rgb, light);
             }
         }
         ms.popPose();

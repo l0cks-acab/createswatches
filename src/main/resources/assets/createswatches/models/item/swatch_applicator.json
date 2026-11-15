@@ -2,7 +2,7 @@
   "parent": "minecraft:builtin/entity",
   "gui_light": "front",
   "textures": {
-    "particle": "createswatches:item/swatch_applicator"
+    "particle": "create:block/brass_block"
   },
   "display": {
     "gui": {

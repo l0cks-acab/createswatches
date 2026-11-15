@@ -11,7 +11,7 @@ final class CarouselVisuals {
 
     static void register() {
         SimpleBlockEntityVisualizer.builder(CreateSwatches.CAROUSEL_BE.get())
-                .factory(OrientedRotatingVisual.backHorizontal(CarouselRenderer.STUB))
+                .factory(OrientedRotatingVisual.backHorizontal(CarouselRenderer.COG))
                 .neverSkipVanillaRender()
                 .apply();
     }

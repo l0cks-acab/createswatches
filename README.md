@@ -10,7 +10,7 @@ NeoForge 1.21.1, Create 6.0.
 
 - Place it **on top of a vault, chest or any inventory** and it reads that inventory.
 - Or **tune it to a logistics network**: right-click a Stock Link with the carousel item (like a Stock Ticker), then place it anywhere. It reads the whole network's stock.
-- It needs **rotation** through a shaft at its back. The input is geared down to spin the tile ring. Stress impact is 1 SU per RPM (configurable).
+- It needs **rotation** through a shaft at its back. It connects through a cog on the back, and the input is geared down to spin the tile ring. Stress impact is 1 SU per RPM (configurable).
 
 ### Swatch tab
 Pick a colour (HSV square, hue bar or hex), then a scheme: single, monochrome, analogous, complementary, split complementary or triadic. Tolerance sets how close a block's colour must be (CIELAB). Each sets how many of every block to pull. Full blocks hides slabs, stairs and the like.
@@ -40,7 +40,7 @@ The card button prints the current palette and picked blocks onto a Swatch Card 
 ![Card](docs/card.png)
 
 ## Swatch Applicator
-Handheld placer. Load it from a carousel with the applicator button. It places the selected block (or a random one from the palette), taking from the carousel's output first and then the storage it sits on. In network mode, order blocks into the carousel first.
+Handheld brass and copper sprayer with a pressure gauge. Load it from a carousel with the applicator button. It places the selected block (or a random one from the palette), taking from the carousel's output first and then the storage it sits on. In network mode, order blocks into the carousel first.
 
 - Shift + right-click: settings (block, Single / Wand / Line / Square, size)
 - Shift + scroll: change block
@@ -55,7 +55,7 @@ Handheld placer. Load it from a carousel with the applicator button. It places t
 `config/createswatches-server.toml`: rotation on/off, stress impact, card paper cost, applicator range.
 
 ## Building
-`./gradlew build`. Textures and models come from `tools/carousel_model.py` and `tools/applicator_texture.py`.
+`./gradlew build`. Textures and models come from `tools/carousel_model.py` and `tools/applicator_model.py`.
 
 ## License
 MIT
