@@ -121,10 +121,8 @@ def banner(ic):
     BW, BH = 1600, 400
     c = bg(shot('hero.png'), (BW, BH))
     c.alpha_composite(ic.resize((300, 300), Image.LANCZOS), (70, 50))
-    glow_text(c, (420, 70), 'CreateSwatches', TITLE(120), radius=22, strength=200)
-    trace(c, 424, 1000, 238)
-    ImageDraw.Draw(c).text((424, 262), 'A spinning swatch stand for your Create storage.', font=BODY(38), fill=CREAM + (255,))
-    chips(c, 426, 330)
+    glow_text(c, (420, 110), 'Create: Swatches', TITLE(120), radius=22, strength=200)
+    chips(c, 426, 290)
     save(c, 'banner.png')
 
 
