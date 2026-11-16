@@ -25,14 +25,14 @@ import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
 
-/** Swatch Carousel: sits on storage (or is tuned to a logistics network), takes rotation through a shaft at its back; the tile ring is geared to spin flat. */
-public class CarouselBlock extends HorizontalKineticBlock implements IBE<CarouselBlockEntity> {
+/** Swatch Carousel: sits on storage (or is tuned to a logistics network), its base is a small cogwheel that meshes with Create cogs beside it, or takes a shaft from below. */
+public class CarouselBlock extends HorizontalKineticBlock implements IBE<CarouselBlockEntity>, com.simibubi.create.content.kinetics.simpleRelays.ICogWheel {
     public static final BlockBehaviour.Properties PROPERTIES = BlockBehaviour.Properties.of()
             .mapColor(MapColor.TERRACOTTA_YELLOW).strength(1.5f, 6f).sound(SoundType.WOOD).noOcclusion();
 
     private static final VoxelShape SHAPE_NORTH = Shapes.or(
-            Block.box(0.5, 0, 0.5, 15.5, 12.5, 15.5),
-            Block.box(4.5, 12.5, 5, 11.5, 16, 10.5));
+            Block.box(0.5, 0, 0.5, 15.5, 13, 15.5),
+            Block.box(4.5, 13, 5, 11.5, 16, 10.5));
     private static final VoxelShape[] SHAPES = new VoxelShape[4];
 
     public CarouselBlock(Properties props) {
@@ -46,12 +46,18 @@ public class CarouselBlock extends HorizontalKineticBlock implements IBE<Carouse
 
     @Override
     public boolean hasShaftTowards(LevelReader level, BlockPos pos, BlockState state, Direction face) {
-        return face == state.getValue(HORIZONTAL_FACING).getOpposite();
+        return face == Direction.DOWN;
     }
 
     @Override
     public Direction.Axis getRotationAxis(BlockState state) {
-        return state.getValue(HORIZONTAL_FACING).getAxis();
+        return Direction.Axis.Y;
+    }
+
+    /** The base is a small cogwheel: it meshes with Create cogs placed beside it (or a large cog diagonally). */
+    @Override
+    public boolean isSmallCog() {
+        return true;
     }
 
     @Override

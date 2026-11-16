@@ -55,54 +55,36 @@ def cylinder(y0, y1, tex, top="top", inset=0.0, name=None):
     return els
 
 
-# Raised base: brass foot, andesite band, then the tile ring; a cog connector sits on the back.
-BASE_TOP = 9
-TILE_TOP = 12.4
+# Brass foot, then Create's small cogwheel (drawn by the renderer, y 6..10), then the card ring and monitor.
+BASE_TOP = 9.5
+TILE_TOP = 12.9
 
 
 def base_elements():
-    els = cylinder(0, 4, "ribs", name="foot")
-    els += cylinder(4, BASE_TOP, "ribs_andesite", name="band")
-    els += cylinder(BASE_TOP, BASE_TOP + 0.6, "brass_block", top="top", inset=2.2, name="hub")
-    # Terminal monitor in the middle; screen faces north (towards the player in the model frame).
+    els = cylinder(0, 6, "ribs", name="foot")
+    # Monitor on an axle above the cog; screen faces north (towards the player in the model frame).
     els += [
-        box((7, 9.6, 7), (9, 10.2, 9), "andesite", name="neck"),
-        box((4.5, 10.2, 5.5), (11.5, 15.6, 10.5), "brass", name="monitor"),
-        box((5.2, 10.8, 5.1), (10.8, 15.0, 5.5), "screen", name="screen",
+        box((7, 10, 7), (9, 10.6, 9), "andesite", name="neck"),
+        box((4.5, 10.6, 5.5), (11.5, 16, 10.5), "brass", name="monitor"),
+        box((5.2, 11.2, 5.1), (10.8, 15.4, 5.5), "screen", name="screen",
             uv={"north": [0, 0, 16, 11], "south": [0, 0, 16, 11], "east": [0, 0, 1, 11], "west": [0, 0, 1, 11],
                 "up": [0, 0, 16, 1], "down": [0, 0, 16, 1]}),
-        box((5, 15.6, 6), (11, 16, 10), "andesite", faces="nsewu", name="vent"),
-        box((11.5, 11.4, 8.6), (12.1, 12.2, 9.6), "brass_block", name="knob_a"),
-        box((11.5, 12.8, 8.6), (12.1, 13.6, 9.6), "brass_block", name="knob_b"),
+        box((11.5, 11.8, 8.6), (12.1, 12.6, 9.6), "brass_block", name="knob_a"),
+        box((11.5, 13.2, 8.6), (12.1, 14.0, 9.6), "brass_block", name="knob_b"),
     ]
     return els
 
 
-def cog_elements():
-    """Raised cog connector on the back face (model points south); spins with the input shaft."""
+def item_cog():
+    """A stand-in cog for the item model (the placed block uses Create's own cogwheel)."""
     els = []
-    tooth = {"north": [0, 0, 16, 2], "south": [0, 0, 16, 2], "east": [0, 0, 1.5, 2], "west": [0, 0, 1.5, 2],
-             "up": [0, 0, 16, 1.5], "down": [0, 0, 16, 1.5]}
     for ang in (0, 45, -45):
-        e = box((2.2, 7, 15.5), (13.8, 9, 17), "cog_side", uv=tooth)
+        e = box((-0.5, 6.5, 6.8), (16.5, 9.5, 9.2), "cog_side")
         if ang:
-            e["rotation"] = {"angle": ang, "axis": "z", "origin": [8, 8, 16]}
+            e["rotation"] = {"angle": ang, "axis": "y", "origin": [8, 8, 8]}
         els.append(e)
-    els.append(box((7, 2.2, 15.5), (9, 13.8, 17), "cog_side",
-                   uv={k: ([0, 0, 2, 16] if k in ("north", "south") else v) for k, v in tooth.items()}))
-    for ang in (0, 45):
-        e = box((4.5, 4.5, 15.3), (11.5, 11.5, 16.8), "cog_top",
-                uv={"north": [4.5, 4.5, 11.5, 11.5], "south": [4.5, 4.5, 11.5, 11.5], "east": [0, 0, 1.5, 7],
-                    "west": [0, 0, 1.5, 7], "up": [0, 0, 7, 1.5], "down": [0, 0, 7, 1.5]})
-        e["faces"]["east"]["texture"] = e["faces"]["west"]["texture"] = "#cog_side"
-        e["faces"]["up"]["texture"] = e["faces"]["down"]["texture"] = "#cog_side"
-        if ang:
-            e["rotation"] = {"angle": ang, "axis": "z", "origin": [8, 8, 16]}
-        els.append(e)
-    els.append(box((6.5, 6.5, 14.6), (9.5, 9.5, 17.3), "axle",
-                   uv={"north": [6, 6, 10, 10], "south": [6, 6, 10, 10], "east": [6, 0, 10, 2.7], "west": [6, 0, 10, 2.7],
-                       "up": [6, 0, 10, 2.7], "down": [6, 0, 10, 2.7]}))
-    els[-1]["faces"]["north"]["texture"] = els[-1]["faces"]["south"]["texture"] = "#axle_top"
+    els.append(box((6.8, 6.5, -0.5), (9.2, 9.5, 16.5), "cog_side"))
+    els.append(box((2, 6.55, 2), (14, 9.45, 14), "cog_top"))
     return els
 
 
@@ -127,7 +109,7 @@ def item_tiles():
 
 TEXTURES = {
     "andesite": ANDESITE, "brass": BRASS, "brass_block": BRASS_BLOCK,
-    "ribs": "createswatches:block/carousel_ribs", "ribs_andesite": "createswatches:block/carousel_ribs_andesite",
+    "ribs": "createswatches:block/carousel_ribs",
     "cog_side": "minecraft:block/stripped_spruce_log", "cog_top": "minecraft:block/stripped_spruce_log_top",
     "axle": "create:block/axis", "axle_top": "create:block/axis_top", "top": "createswatches:block/carousel_top",
     "screen": "createswatches:block/carousel_screen", "tiles": "createswatches:block/carousel_tiles",
@@ -169,18 +151,7 @@ def textures():
             v = rnd.randint(-4, 4)
             p[x, y] = tuple(max(0, min(255, c + v)) for c in base) + (255,)
     ribs.save(TEX / "carousel_ribs.png")
-    ribs = Image.new("RGBA", (16, 16))
-    p = ribs.load()
-    for y in range(16):
-        for x in range(16):
-            base = [(168, 166, 156), (140, 138, 130)][x % 2]
-            if x % 4 == 3:
-                base = (104, 102, 96)
-            if y == 0:
-                base = (190, 188, 178)
-            v = rnd.randint(-4, 4)
-            p[x, y] = tuple(max(0, min(255, c + v)) for c in base) + (255,)
-    ribs.save(TEX / "carousel_ribs_andesite.png")
+    (TEX / "carousel_ribs_andesite.png").unlink(missing_ok=True)
     # Top: dark walnut with a brass rim ring drawn by distance from centre.
     top = Image.new("RGBA", (16, 16))
     p = top.load()
@@ -228,9 +199,9 @@ def main():
     for old in ("keys", "carriage"):
         (MODELS / f"block/swatch_carousel/{old}.json").unlink(missing_ok=True)
     write(MODELS / "block/swatch_carousel/block.json", model(base_elements(), "minecraft:block/block"))
-    (MODELS / "block/swatch_carousel/shaft_stub.json").unlink(missing_ok=True)
-    write(MODELS / "block/swatch_carousel/cog.json", model(cog_elements(), particle="minecraft:block/stripped_spruce_log"))
-    write(MODELS / "item/swatch_carousel.json", model(base_elements() + item_tiles() + cog_elements(), "minecraft:block/block"))
+    for old in ("shaft_stub", "cog"):
+        (MODELS / f"block/swatch_carousel/{old}.json").unlink(missing_ok=True)
+    write(MODELS / "item/swatch_carousel.json", model(base_elements() + item_cog() + item_tiles(), "minecraft:block/block"))
     states = {"variants": {f"facing={f}": {"model": "createswatches:block/swatch_carousel/block", **({"y": r} if r else {})}
                            for f, r in (("north", 0), ("east", 90), ("south", 180), ("west", 270))}}
     write(ASSETS / "blockstates/swatch_carousel.json", states)

@@ -7,7 +7,6 @@ import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.mojang.math.Axis;
 import com.simibubi.create.content.kinetics.base.HorizontalKineticBlock;
 import com.simibubi.create.content.kinetics.base.KineticBlockEntityRenderer;
-import net.createmod.catnip.animation.AnimationTickHolder;
 import net.createmod.catnip.render.CachedBuffers;
 import net.createmod.catnip.render.SuperByteBuffer;
 import net.minecraft.client.renderer.MultiBufferSource;
@@ -23,23 +22,15 @@ import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 
-/** Back cog connector (without Flywheel), the spinning ring of swatch tiles and the palette on the monitor. */
+/** Base cogwheel (without Flywheel), the spinning ring of swatch tiles and the palette on the monitor. */
 public class CarouselRenderer extends KineticBlockEntityRenderer<CarouselBlockEntity> {
     private static final ResourceLocation WHITE = CreateSwatches.id("textures/block/chip.png");
     /** Flourish length in ticks; matches the block entity. */
     private static final float SPIN_TICKS = 36f;
     /** The ring is geared down from the input shaft. */
-    private static final float GEARING = 1 / 6f;
-    private static final float BASE = 9 / 16f, TOP = 12.4f / 16f;
+    private static final float BASE = 9.5f / 16f, TOP = 12.9f / 16f;
     private static final float R0 = 5.0f / 16f, R1 = 7.3f / 16f, HALF_W = 0.32f / 16f;
     private static final int BLANK = 0x5A5048;
-
-    public static dev.engine_room.flywheel.lib.model.baked.PartialModel COG;
-
-    /** Partial models must exist before models load. */
-    public static void init() {
-        if (COG == null) COG = dev.engine_room.flywheel.lib.model.baked.PartialModel.of(CreateSwatches.id("block/swatch_carousel/cog"));
-    }
 
     public CarouselRenderer(BlockEntityRendererProvider.Context ctx) {
         super(ctx);
@@ -47,7 +38,7 @@ public class CarouselRenderer extends KineticBlockEntityRenderer<CarouselBlockEn
 
     @Override
     protected SuperByteBuffer getRotatedModel(CarouselBlockEntity be, BlockState state) {
-        return CachedBuffers.partialFacing(COG, state, state.getValue(HorizontalKineticBlock.HORIZONTAL_FACING).getOpposite());
+        return CachedBuffers.partial(com.simibubi.create.AllPartialModels.SHAFTLESS_COGWHEEL, state);
     }
 
     /** Colours for each tile: the palette in blocks, else the stocked blocks sorted round the hue wheel. */
@@ -83,8 +74,8 @@ public class CarouselRenderer extends KineticBlockEntityRenderer<CarouselBlockEn
         float progress = be.typing() > 0 ? 1 - left / SPIN_TICKS : 1;
         // Export or print gives the ring one extra eased turn.
         float flourish = (float) (360 * (0.5 - 0.5 * Math.cos(Math.PI * progress)));
-        float time = AnimationTickHolder.getRenderTime(be.getLevel());
-        float angle = (time * be.getSpeed() * 3f / 10f * GEARING + flourish) % 360;
+        // Cards ride on the cog, so they turn with it (same angle and mesh offset Create uses).
+        float angle = (float) Math.toDegrees(getAngleForBe(be, be.getBlockPos(), Direction.Axis.Y)) + flourish;
 
         VertexConsumer vc = buffers.getBuffer(RenderType.entityCutoutNoCull(WHITE));
         int[] ring = ringColours(be);
@@ -112,7 +103,7 @@ public class CarouselRenderer extends KineticBlockEntityRenderer<CarouselBlockEn
             for (int i = 0; i < shown; i++) {
                 int col = i % 4, row = i / 4;
                 float x0 = (5.7f + col * 1.2f) / 16f, x1 = x0 + 1.0f / 16f;
-                float y1 = (14.6f - row * 1.4f) / 16f, y0 = y1 - 1.0f / 16f;
+                float y1 = (15.0f - row * 1.4f) / 16f, y0 = y1 - 1.0f / 16f;
                 quad(vc, pose, x0, y0, x1, y1, z, pal[i], light);
             }
         } else {
@@ -122,7 +113,7 @@ public class CarouselRenderer extends KineticBlockEntityRenderer<CarouselBlockEn
                 int rgb = info == null ? BLANK : info.rgb();
                 float x0 = (5.7f + i * 0.6f) / 16f, x1 = x0 + 0.45f / 16f;
                 float h = 2.8f * (1 - i / 10f);
-                quad(vc, pose, x0, 11.3f / 16f, x1, (11.3f + h) / 16f, z, rgb, light);
+                quad(vc, pose, x0, 11.7f / 16f, x1, (11.7f + h) / 16f, z, rgb, light);
             }
         }
         ms.popPose();

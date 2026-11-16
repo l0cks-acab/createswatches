@@ -83,7 +83,6 @@ public class CreateSwatches {
         MENUS.register(modBus);
         COMPONENTS.register(modBus);
         TABS.register(modBus);
-        if (net.neoforged.fml.loading.FMLEnvironment.dist.isClient()) com.lach.createswatches.client.CarouselRenderer.init();
         modBus.addListener(CreateSwatches::registerCaps);
         modBus.addListener(CreateSwatches::registerPayloads);
         modBus.addListener((FMLCommonSetupEvent e) -> e.enqueueWork(() ->

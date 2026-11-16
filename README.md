@@ -10,7 +10,7 @@ NeoForge 1.21.1, Create 6.0.
 
 - Place it **on top of a vault, chest or any inventory** and it reads that inventory.
 - Or **tune it to a logistics network**: right-click a Stock Link with the carousel item (like a Stock Ticker), then place it anywhere. It reads the whole network's stock.
-- It needs **rotation** through a shaft at its back. It connects through a cog on the back, and the input is geared down to spin the tile ring. Stress impact is 1 SU per RPM (configurable).
+- It needs **rotation**. Its base is a Create small cogwheel: put a cog beside it (or a large cog diagonally) to drive it, or a shaft from below. The card ring turns with the cog. Stress impact is 1 SU per RPM (configurable).
 
 ### Swatch tab
 Pick a colour (HSV square, hue bar or hex), then a scheme: single, monochrome, analogous, complementary, split complementary or triadic. Tolerance sets how close a block's colour must be (CIELAB). Each sets how many of every block to pull. Full blocks hides slabs, stairs and the like.
@@ -32,7 +32,7 @@ Click blocks in the grid to choose exactly which ones export. With none selected
 
 The ring of swatch tiles shows the current palette, or the most-stocked blocks sorted by hue when no palette is set. The monitor shows the palette. On export the ring gives an extra turn.
 
-![Carousel](docs/spin.png)
+![Carousel meshed with a Create cog](docs/spin.png)
 
 ## Swatch Card
 The card button prints the current palette and picked blocks onto a Swatch Card (uses one paper). Use a card on any carousel to open it on that palette.
