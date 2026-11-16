@@ -2,7 +2,9 @@
 
 A Create addon for builders. Put a **Swatch Carousel**, a spinning swatch stand with a terminal, on your storage, pick a colour or a theme, and it pulls out the blocks that match.
 
-![Carousel on an item vault](docs/scene.png)
+![CreateSwatches](docs/banner.png)
+
+![Carousel spinning and exporting](docs/carousel.gif)
 
 NeoForge 1.21.1, Create 6.0.
 
@@ -13,7 +15,7 @@ NeoForge 1.21.1, Create 6.0.
 - It needs **rotation**. Its base is a Create small cogwheel: put a cog beside it (or a large cog diagonally) to drive it, or a shaft from below. The card ring turns with the cog. Stress impact is 1 SU per RPM (configurable).
 
 ### Swatch tab
-Pick a colour (HSV square, hue bar or hex), then a scheme: single, monochrome, analogous, complementary, split complementary or triadic. Tolerance sets how close a block's colour must be (CIELAB). Each sets how many of every block to pull. Full blocks hides slabs, stairs and the like.
+Pick a colour (HSV square, hue bar or hex), then a scheme: single, monochrome, analogous, complementary, split complementary or triadic. Tolerance sets how close a block's colour must be (CIELAB). After a change the slider rests for 3 seconds. Each sets how many of every block to pull. Full blocks hides slabs, stairs and the like.
 
 ![Swatch tab](docs/swatch.png)
 

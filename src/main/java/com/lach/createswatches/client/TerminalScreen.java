@@ -303,20 +303,58 @@ public abstract class TerminalScreen extends AbstractContainerScreen<CarouselMen
         addToleranceSlider(toleranceSlider.getX(), toleranceSlider.getY(), toleranceSlider.getWidth());
     }
 
+    /** After a tolerance change the slider locks for this long, so drags can't flood the matcher. */
+    private static final long TOLERANCE_COOLDOWN_MS = 3000;
+    private static long toleranceLockedUntil;
+
     private void addToleranceSlider(int x, int y, int w) {
         toleranceSlider = addRenderableWidget(new AbstractSliderButton(x, y, w, 14, Component.empty(), tolerance / (double) MAX_TOLERANCE) {
+            private int applied = tolerance;
+
             {
                 updateMessage();
             }
 
             @Override
             protected void updateMessage() {
-                setMessage(Component.translatable("gui.createswatches.tolerance", tolerance));
+                long left = toleranceLockedUntil - net.minecraft.Util.getMillis();
+                setMessage(left > 0
+                        ? Component.translatable("gui.createswatches.tolerance_wait", tolerance, (left + 999) / 1000)
+                        : Component.translatable("gui.createswatches.tolerance", tolerance));
             }
 
             @Override
             protected void applyValue() {
+                // Only the label follows the drag; the match runs once on release.
                 tolerance = Math.max(1, (int) Math.round(value * MAX_TOLERANCE));
+            }
+
+            @Override
+            public void onRelease(double mouseX, double mouseY) {
+                super.onRelease(mouseX, mouseY);
+                commit();
+            }
+
+            @Override
+            public boolean keyPressed(int key, int scan, int mods) {
+                boolean used = super.keyPressed(key, scan, mods);
+                if (used) commit();
+                return used;
+            }
+
+            @Override
+            public void renderWidget(net.minecraft.client.gui.GuiGraphics g, int mx, int my, float pt) {
+                boolean locked = toleranceLockedUntil > net.minecraft.Util.getMillis();
+                if (active == locked) active = !locked;
+                updateMessage();
+                super.renderWidget(g, mx, my, pt);
+            }
+
+            private void commit() {
+                if (tolerance == applied) return;
+                applied = tolerance;
+                toleranceLockedUntil = net.minecraft.Util.getMillis() + TOLERANCE_COOLDOWN_MS;
+                active = false;
                 TerminalScreen.this.update();
             }
         });

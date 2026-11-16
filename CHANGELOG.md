@@ -1,5 +1,8 @@
 # Changelog
 
+## 0.2.2
+- Tolerance slider: the match now runs once when you let go, then the slider greys out for 3 seconds. Stops slider spam from lagging clients and servers.
+
 ## 0.2.1
 - Swatch Applicator: new 3D steampunk model in Create's style (brass body, copper tank and nozzle, pressure gauge, side cog). The selected block shows in a sample window on top.
 - Swatch Carousel: the base is now a Create small cogwheel. It meshes with cogs beside it (large cogs diagonally) or takes a shaft from below, and the card ring turns with it. The back shaft input is gone.

@@ -6,6 +6,7 @@
   "scheme.createswatches.split": "Split Compl.",
   "scheme.createswatches.triadic": "Triadic",
   "gui.createswatches.tolerance": "Tolerance: %s",
+  "gui.createswatches.tolerance_wait": "Tolerance: %s (%ss)",
   "gui.createswatches.per_item": "Each: %s",
   "gui.createswatches.full_only": "Full blocks",
   "gui.createswatches.any_shape": "Any shape",
