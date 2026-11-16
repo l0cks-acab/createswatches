@@ -1,5 +1,5 @@
 """CreateSwatches CurseForge / README art: icon, banner and captioned gallery images.
-python3 tools/listing.py <shots_dir> <out_dir>"""
+python3 tools/listing.py <shots_dir> <out_dir>  (run tools/logo.py into <out_dir> first for the badge logo)"""
 import os
 import sys
 from PIL import Image, ImageDraw, ImageEnhance, ImageFilter, ImageFont
@@ -95,6 +95,10 @@ def save(canvas, name, size=None):
 
 
 def icon():
+    """Uses the badge from tools/logo.py when it is already in the output folder."""
+    made = os.path.join(OUT, 'icon-1024.png')
+    if os.path.exists(made):
+        return Image.open(made).convert('RGBA')
     S = 1024
     src = shot('hero2.png').crop((540, 150, 1040, 650)).resize((S - 160, S - 160), Image.LANCZOS)
     c = Image.new('RGBA', (S, S), WALNUT_DARK + (255,))

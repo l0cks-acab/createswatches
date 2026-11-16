@@ -4,8 +4,7 @@
     "brass": "create:block/brass_casing",
     "brass_block": "create:block/brass_block",
     "ribs": "createswatches:block/carousel_ribs",
-    "cog_side": "minecraft:block/stripped_spruce_log",
-    "cog_top": "minecraft:block/stripped_spruce_log_top",
+    "cogwheel": "create:block/cogwheel",
     "top": "createswatches:block/carousel_top",
     "screen": "createswatches:block/carousel_screen",
     "tiles": "createswatches:block/carousel_tiles",
@@ -566,138 +565,85 @@
     },
     {
       "from": [
-        -0.5,
+        -1,
         6.5,
-        6.8
+        6.5
       ],
       "to": [
-        16.5,
+        17,
         9.5,
-        9.2
+        9.5
       ],
       "faces": {
         "north": {
           "uv": [
-            -0.5,
-            6.5,
-            16.5,
+            7,
+            8,
+            16,
             9.5
           ],
-          "texture": "#cog_side"
-        },
-        "south": {
-          "uv": [
-            -0.5,
-            6.5,
-            16.5,
-            9.5
-          ],
-          "texture": "#cog_side"
+          "texture": "#cogwheel"
         },
         "east": {
           "uv": [
-            6.800000000000001,
+            5,
+            8,
             6.5,
-            9.2,
             9.5
           ],
-          "texture": "#cog_side"
+          "texture": "#cogwheel"
+        },
+        "south": {
+          "uv": [
+            7,
+            8,
+            16,
+            9.5
+          ],
+          "texture": "#cogwheel"
         },
         "west": {
           "uv": [
-            6.8,
+            5,
+            8,
             6.5,
-            9.2,
             9.5
           ],
-          "texture": "#cog_side"
+          "texture": "#cogwheel"
         },
         "up": {
           "uv": [
-            -0.5,
-            6.8,
-            16.5,
-            9.2
+            7,
+            6,
+            16,
+            7.5
           ],
-          "texture": "#cog_side"
+          "texture": "#cogwheel"
         },
         "down": {
           "uv": [
-            -0.5,
-            6.800000000000001,
-            16.5,
-            9.2
+            7,
+            6,
+            16,
+            7.5
           ],
-          "texture": "#cog_side"
+          "texture": "#cogwheel"
         }
       }
     },
     {
       "from": [
-        -0.5,
+        -1,
         6.5,
-        6.8
+        6.5
       ],
       "to": [
-        16.5,
+        17,
         9.5,
-        9.2
+        9.5
       ],
-      "faces": {
-        "north": {
-          "uv": [
-            -0.5,
-            6.5,
-            16.5,
-            9.5
-          ],
-          "texture": "#cog_side"
-        },
-        "south": {
-          "uv": [
-            -0.5,
-            6.5,
-            16.5,
-            9.5
-          ],
-          "texture": "#cog_side"
-        },
-        "east": {
-          "uv": [
-            6.800000000000001,
-            6.5,
-            9.2,
-            9.5
-          ],
-          "texture": "#cog_side"
-        },
-        "west": {
-          "uv": [
-            6.8,
-            6.5,
-            9.2,
-            9.5
-          ],
-          "texture": "#cog_side"
-        },
-        "up": {
-          "uv": [
-            -0.5,
-            6.8,
-            16.5,
-            9.2
-          ],
-          "texture": "#cog_side"
-        },
-        "down": {
-          "uv": [
-            -0.5,
-            6.800000000000001,
-            16.5,
-            9.2
-          ],
-          "texture": "#cog_side"
-        }
+      "neoforge_data": {
+        "calculate_normals": true
       },
       "rotation": {
         "angle": 45,
@@ -707,74 +653,77 @@
           8,
           8
         ]
+      },
+      "faces": {
+        "north": {
+          "uv": [
+            7,
+            8,
+            16,
+            9.5
+          ],
+          "texture": "#cogwheel"
+        },
+        "east": {
+          "uv": [
+            5,
+            8,
+            6.5,
+            9.5
+          ],
+          "texture": "#cogwheel"
+        },
+        "south": {
+          "uv": [
+            7,
+            8,
+            16,
+            9.5
+          ],
+          "texture": "#cogwheel"
+        },
+        "west": {
+          "uv": [
+            5,
+            8,
+            6.5,
+            9.5
+          ],
+          "texture": "#cogwheel"
+        },
+        "up": {
+          "uv": [
+            7,
+            6,
+            16,
+            7.5
+          ],
+          "texture": "#cogwheel"
+        },
+        "down": {
+          "uv": [
+            7,
+            6,
+            16,
+            7.5
+          ],
+          "texture": "#cogwheel"
+        }
       }
     },
     {
       "from": [
-        -0.5,
+        -1,
         6.5,
-        6.8
+        6.5
       ],
       "to": [
-        16.5,
+        17,
         9.5,
-        9.2
+        9.5
       ],
-      "faces": {
-        "north": {
-          "uv": [
-            -0.5,
-            6.5,
-            16.5,
-            9.5
-          ],
-          "texture": "#cog_side"
-        },
-        "south": {
-          "uv": [
-            -0.5,
-            6.5,
-            16.5,
-            9.5
-          ],
-          "texture": "#cog_side"
-        },
-        "east": {
-          "uv": [
-            6.800000000000001,
-            6.5,
-            9.2,
-            9.5
-          ],
-          "texture": "#cog_side"
-        },
-        "west": {
-          "uv": [
-            6.8,
-            6.5,
-            9.2,
-            9.5
-          ],
-          "texture": "#cog_side"
-        },
-        "up": {
-          "uv": [
-            -0.5,
-            6.8,
-            16.5,
-            9.2
-          ],
-          "texture": "#cog_side"
-        },
-        "down": {
-          "uv": [
-            -0.5,
-            6.800000000000001,
-            16.5,
-            9.2
-          ],
-          "texture": "#cog_side"
-        }
+      "neoforge_data": {
+        "calculate_normals": true
       },
       "rotation": {
         "angle": -45,
@@ -784,73 +733,131 @@
           8,
           8
         ]
+      },
+      "faces": {
+        "north": {
+          "uv": [
+            7,
+            8,
+            16,
+            9.5
+          ],
+          "texture": "#cogwheel"
+        },
+        "east": {
+          "uv": [
+            5,
+            8,
+            6.5,
+            9.5
+          ],
+          "texture": "#cogwheel"
+        },
+        "south": {
+          "uv": [
+            7,
+            8,
+            16,
+            9.5
+          ],
+          "texture": "#cogwheel"
+        },
+        "west": {
+          "uv": [
+            5,
+            8,
+            6.5,
+            9.5
+          ],
+          "texture": "#cogwheel"
+        },
+        "up": {
+          "uv": [
+            7,
+            6,
+            16,
+            7.5
+          ],
+          "texture": "#cogwheel"
+        },
+        "down": {
+          "uv": [
+            7,
+            6,
+            16,
+            7.5
+          ],
+          "texture": "#cogwheel"
+        }
       }
     },
     {
       "from": [
-        6.8,
         6.5,
-        -0.5
+        6.5,
+        -1
       ],
       "to": [
-        9.2,
         9.5,
-        16.5
+        9.5,
+        17
       ],
       "faces": {
         "north": {
           "uv": [
-            6.800000000000001,
+            5,
+            8,
             6.5,
-            9.2,
             9.5
           ],
-          "texture": "#cog_side"
-        },
-        "south": {
-          "uv": [
-            6.8,
-            6.5,
-            9.2,
-            9.5
-          ],
-          "texture": "#cog_side"
+          "texture": "#cogwheel"
         },
         "east": {
           "uv": [
-            -0.5,
-            6.5,
-            16.5,
+            7,
+            8,
+            16,
             9.5
           ],
-          "texture": "#cog_side"
+          "texture": "#cogwheel"
+        },
+        "south": {
+          "uv": [
+            5,
+            8,
+            6.5,
+            9.5
+          ],
+          "texture": "#cogwheel"
         },
         "west": {
           "uv": [
-            -0.5,
-            6.5,
-            16.5,
+            7,
+            8,
+            16,
             9.5
           ],
-          "texture": "#cog_side"
+          "texture": "#cogwheel"
         },
         "up": {
           "uv": [
-            6.8,
-            -0.5,
-            9.2,
-            16.5
+            7,
+            6,
+            16,
+            7.5
           ],
-          "texture": "#cog_side"
+          "rotation": 90,
+          "texture": "#cogwheel"
         },
         "down": {
           "uv": [
-            6.8,
-            -0.5,
-            9.2,
-            16.5
+            7,
+            6,
+            16,
+            7.5
           ],
-          "texture": "#cog_side"
+          "rotation": 90,
+          "texture": "#cogwheel"
         }
       }
     },
@@ -868,57 +875,125 @@
       "faces": {
         "north": {
           "uv": [
-            2,
-            6.550000000000001,
-            14,
-            9.45
+            0,
+            6,
+            6,
+            7.5
           ],
-          "texture": "#cog_top"
-        },
-        "south": {
-          "uv": [
-            2,
-            6.550000000000001,
-            14,
-            9.45
-          ],
-          "texture": "#cog_top"
+          "texture": "#cogwheel"
         },
         "east": {
           "uv": [
-            2,
-            6.550000000000001,
-            14,
-            9.45
+            0,
+            6,
+            6,
+            7.5
           ],
-          "texture": "#cog_top"
+          "texture": "#cogwheel"
+        },
+        "south": {
+          "uv": [
+            0,
+            6,
+            6,
+            7.5
+          ],
+          "texture": "#cogwheel"
         },
         "west": {
           "uv": [
-            2,
-            6.550000000000001,
-            14,
-            9.45
+            0,
+            6,
+            6,
+            7.5
           ],
-          "texture": "#cog_top"
+          "texture": "#cogwheel"
         },
         "up": {
           "uv": [
-            2,
-            2,
-            14,
-            14
+            4,
+            0,
+            10,
+            6
           ],
-          "texture": "#cog_top"
+          "texture": "#cogwheel"
         },
         "down": {
           "uv": [
-            2,
-            2,
-            14,
-            14
+            4,
+            0,
+            10,
+            6
           ],
-          "texture": "#cog_top"
+          "texture": "#cogwheel"
+        }
+      }
+    },
+    {
+      "from": [
+        4,
+        6,
+        4
+      ],
+      "to": [
+        12,
+        10,
+        12
+      ],
+      "faces": {
+        "north": {
+          "uv": [
+            0,
+            4,
+            4,
+            6
+          ],
+          "texture": "#cogwheel"
+        },
+        "east": {
+          "uv": [
+            0,
+            4,
+            4,
+            6
+          ],
+          "texture": "#cogwheel"
+        },
+        "south": {
+          "uv": [
+            0,
+            4,
+            4,
+            6
+          ],
+          "texture": "#cogwheel"
+        },
+        "west": {
+          "uv": [
+            0,
+            4,
+            4,
+            6
+          ],
+          "texture": "#cogwheel"
+        },
+        "up": {
+          "uv": [
+            0,
+            0,
+            4,
+            4
+          ],
+          "texture": "#cogwheel"
+        },
+        "down": {
+          "uv": [
+            0,
+            0,
+            4,
+            4
+          ],
+          "texture": "#cogwheel"
         }
       }
     },

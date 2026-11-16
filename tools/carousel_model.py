@@ -75,17 +75,12 @@ def base_elements():
     return els
 
 
+# Create's small cogwheel (cogwheel_shaftless, MIT), so the item matches the placed block.
+CREATE_COG = json.loads('''[{"from": [-1, 6.5, 6.5], "to": [17, 9.5, 9.5], "faces": {"north": {"uv": [7, 8, 16, 9.5], "texture": "#cogwheel"}, "east": {"uv": [5, 8, 6.5, 9.5], "texture": "#cogwheel"}, "south": {"uv": [7, 8, 16, 9.5], "texture": "#cogwheel"}, "west": {"uv": [5, 8, 6.5, 9.5], "texture": "#cogwheel"}, "up": {"uv": [7, 6, 16, 7.5], "texture": "#cogwheel"}, "down": {"uv": [7, 6, 16, 7.5], "texture": "#cogwheel"}}}, {"from": [-1, 6.5, 6.5], "to": [17, 9.5, 9.5], "neoforge_data": {"calculate_normals": true}, "rotation": {"angle": 45, "axis": "y", "origin": [8, 8, 8]}, "faces": {"north": {"uv": [7, 8, 16, 9.5], "texture": "#cogwheel"}, "east": {"uv": [5, 8, 6.5, 9.5], "texture": "#cogwheel"}, "south": {"uv": [7, 8, 16, 9.5], "texture": "#cogwheel"}, "west": {"uv": [5, 8, 6.5, 9.5], "texture": "#cogwheel"}, "up": {"uv": [7, 6, 16, 7.5], "texture": "#cogwheel"}, "down": {"uv": [7, 6, 16, 7.5], "texture": "#cogwheel"}}}, {"from": [-1, 6.5, 6.5], "to": [17, 9.5, 9.5], "neoforge_data": {"calculate_normals": true}, "rotation": {"angle": -45, "axis": "y", "origin": [8, 8, 8]}, "faces": {"north": {"uv": [7, 8, 16, 9.5], "texture": "#cogwheel"}, "east": {"uv": [5, 8, 6.5, 9.5], "texture": "#cogwheel"}, "south": {"uv": [7, 8, 16, 9.5], "texture": "#cogwheel"}, "west": {"uv": [5, 8, 6.5, 9.5], "texture": "#cogwheel"}, "up": {"uv": [7, 6, 16, 7.5], "texture": "#cogwheel"}, "down": {"uv": [7, 6, 16, 7.5], "texture": "#cogwheel"}}}, {"from": [6.5, 6.5, -1], "to": [9.5, 9.5, 17], "faces": {"north": {"uv": [5, 8, 6.5, 9.5], "texture": "#cogwheel"}, "east": {"uv": [7, 8, 16, 9.5], "texture": "#cogwheel"}, "south": {"uv": [5, 8, 6.5, 9.5], "texture": "#cogwheel"}, "west": {"uv": [7, 8, 16, 9.5], "texture": "#cogwheel"}, "up": {"uv": [7, 6, 16, 7.5], "rotation": 90, "texture": "#cogwheel"}, "down": {"uv": [7, 6, 16, 7.5], "rotation": 90, "texture": "#cogwheel"}}}, {"from": [2, 6.55, 2], "to": [14, 9.45, 14], "faces": {"north": {"uv": [0, 6, 6, 7.5], "texture": "#cogwheel"}, "east": {"uv": [0, 6, 6, 7.5], "texture": "#cogwheel"}, "south": {"uv": [0, 6, 6, 7.5], "texture": "#cogwheel"}, "west": {"uv": [0, 6, 6, 7.5], "texture": "#cogwheel"}, "up": {"uv": [4, 0, 10, 6], "texture": "#cogwheel"}, "down": {"uv": [4, 0, 10, 6], "texture": "#cogwheel"}}}, {"from": [4, 6, 4], "to": [12, 10, 12], "faces": {"north": {"uv": [0, 4, 4, 6], "texture": "#cogwheel"}, "east": {"uv": [0, 4, 4, 6], "texture": "#cogwheel"}, "south": {"uv": [0, 4, 4, 6], "texture": "#cogwheel"}, "west": {"uv": [0, 4, 4, 6], "texture": "#cogwheel"}, "up": {"uv": [0, 0, 4, 4], "texture": "#cogwheel"}, "down": {"uv": [0, 0, 4, 4], "texture": "#cogwheel"}}}]''')
+
+
 def item_cog():
-    """A stand-in cog for the item model (the placed block uses Create's own cogwheel)."""
-    els = []
-    for ang in (0, 45, -45):
-        e = box((-0.5, 6.5, 6.8), (16.5, 9.5, 9.2), "cog_side")
-        if ang:
-            e["rotation"] = {"angle": ang, "axis": "y", "origin": [8, 8, 8]}
-        els.append(e)
-    els.append(box((6.8, 6.5, -0.5), (9.2, 9.5, 16.5), "cog_side"))
-    els.append(box((2, 6.55, 2), (14, 9.45, 14), "cog_top"))
-    return els
+    return json.loads(json.dumps(CREATE_COG))
 
 
 def item_tiles():
@@ -110,7 +105,7 @@ def item_tiles():
 TEXTURES = {
     "andesite": ANDESITE, "brass": BRASS, "brass_block": BRASS_BLOCK,
     "ribs": "createswatches:block/carousel_ribs",
-    "cog_side": "minecraft:block/stripped_spruce_log", "cog_top": "minecraft:block/stripped_spruce_log_top",
+    "cogwheel": "create:block/cogwheel",
     "axle": "create:block/axis", "axle_top": "create:block/axis_top", "top": "createswatches:block/carousel_top",
     "screen": "createswatches:block/carousel_screen", "tiles": "createswatches:block/carousel_tiles",
 }
